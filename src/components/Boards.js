@@ -8,7 +8,11 @@ import {
 } from "@material-tailwind/react";
 import board from "../assets/img/board.png"
 import PlayerAvatar from "./PlayerAvatar";
+import format from "../data/fantacy.json";
 const Boards = () => {
+    const dummyPlayer = '<div className="inline-block pb-32 w-4/12 player"></div>';
+    const TeamFormats = ["1", "2", "1"];
+
     return (
         <div className="flex justify-center relative top-12">
 
@@ -19,14 +23,13 @@ const Boards = () => {
                 </CardHeader>
 
                 <CardBody className="text-center" >
-                    <div className="grid grid-cols-3 gap-4 bg-[url('/src/assets/img/board.png')] board">
-                        <PlayerAvatar />
-                        <PlayerAvatar />
-                        <PlayerAvatar />
-                        <PlayerAvatar />
-                        <PlayerAvatar />
-                        <PlayerAvatar />
-                        <PlayerAvatar />
+                    <div className="grid grid-cols-5 gap-4 bg-[url('/src/assets/img/board.png')] board">
+                        {
+                            format.format["5"]["2"].map((player) => (
+                                player === 0 ? < div className="inline-block w-1/5 player" ></div> : <PlayerAvatar />
+                            ))
+                        }
+
                     </div>
                     {/* <img
                         src={board}
