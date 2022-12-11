@@ -9,8 +9,8 @@ import {
 } from "@material-tailwind/react";
 import InputRange from "./InputRange";
 import PlayerConfig from "../context/PlayerConfig";
-const AddPlayer = () => {
-    const { config, resetConfig, setName, setPower, setSpeed, setDefance } = useContext(PlayerConfig);
+const AddPlayer = ({ btnStyle }) => {
+    const { config, setName, setPower, setSpeed, setDefance } = useContext(PlayerConfig);
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(!open);
 
@@ -21,7 +21,7 @@ const AddPlayer = () => {
     }
     return (
         <Fragment>
-            <Button onClick={handleOpen} variant="gradient">
+            <Button onClick={handleOpen} variant="gradient" className={btnStyle} color="indigo">
                 Add Player
             </Button>
             <Dialog open={open} handler={handleOpen} size="xl">

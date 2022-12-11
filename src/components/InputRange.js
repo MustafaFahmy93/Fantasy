@@ -1,11 +1,9 @@
-import React, { useState } from 'react'
+import React, { } from 'react'
 
 
 const InputRange = ({ inputName, playerPower, disabled, method }) => {
-    // const [val, setVaule] = useState(playerPower);
     const handleChange = (e) => {
         const { value } = e.target;
-        // console.log([name, value]);
         if (disabled) {
             method(playerPower)
         } else if (value === "") {

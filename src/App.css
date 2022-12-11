@@ -7,9 +7,35 @@
     display: block;
     margin-right: auto;
     position: relative;
+
+    /* background: transparent url(./assets/img/bg.jpg) no-repeat center; */
+    /* background:url(./assets/img/board.png) no-repeat center; */
+    background-color: transparent;
 }
 
 .player{
     display: inline-block;
-    margin-bottom: 80px;
+    /* margin-bottom: 100px; */
+}
+
+.bg-img{
+/* background-image: url(./assets/img/bg.jpg); 
+    background-repeat: no-repeat; 
+    background-position: right; 
+    background-attachment: scroll;       
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    height:100%;
+    width:100%; 
+    z-index: -1;
+    position: fixed; */
+
+
+
+}
+
+.board-bg{
+    background-color: rgb(75,177,117, 0.2);
+    color: #fff;
 }
