@@ -39,9 +39,9 @@ const Nav = () => {
           as="a"
           href="/"
           variant="small"
-          className="mr-4 cursor-pointer py-1.5 font-normal"
+          className="mr-4 cursor-pointer py-1.5 font-logo text-4xl"
         >
-          <span>Fantasy</span>
+          <span className="text-logo">Fantasy</span>
         </Typography>
         <div className="hidden lg:block">{navList}</div>
         <AddPlayer btnStyle={"hidden lg:inline-block bg-purple"} />

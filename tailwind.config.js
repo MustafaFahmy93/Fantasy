@@ -5,9 +5,10 @@ module.exports = withMT({
   darkMode: 'class',
   theme: {
     fontFamily: {
-      display: ['Open Sans', 'sans-serif', 'EB Garamond'],
-      body: ['Open Sans', 'sans-serif', 'EB Garamond'],
-      logo: ['Caveat'],
+      display: ['Open Sans', 'sans-serif', 'EB Garamond', 'Cantarell'],
+      body: ['Open Sans', 'sans-serif', 'EB Garamond', 'Ubuntu', 'Cantarell'],
+      app: ['Kenia'],
+      logo: ['Indie Flower'],
     },
     screens: {
       sm: '480px',
@@ -25,6 +26,7 @@ module.exports = withMT({
         veryDarkBlue: 'hsl(233, 12%, 13%)',
         veryPaleRed: 'hsl(13, 100%, 96%)',
         veryLightGray: 'hsl(0, 0%, 98%)',
+        newColor: "rgb(210,37,0)",
       },
       fontSize: {
         14: '14px',

@@ -5,7 +5,10 @@ export function AppProvide({ children }) {
     const defaultConfig = {
         isLogin: false,
         user: "admin",
-        pass: "admin"
+        pass: "admin",
+        teamSize: "5",
+        nTeams: "3",
+
     }
     // App Config
     const [config, setConfig] = useState(defaultConfig);
@@ -17,9 +20,19 @@ export function AppProvide({ children }) {
             return { ...prevState, isLogin: auth }
         });
     };
+    const setTeamSize = (sizw) => {
+        setConfig((prevState) => {
+            return { ...prevState, teamSize: sizw }
+        });
+    };
+    const setNTeams = (num) => {
+        setConfig((prevState) => {
+            return { ...prevState, nTeams: num }
+        });
+    };
 
     const methods = {
-        config, resetConfig, setLogin
+        config, resetConfig, setLogin, setTeamSize, setNTeams
     }
 
     return (
