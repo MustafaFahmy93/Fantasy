@@ -1,50 +1,49 @@
 import React from 'react'
-import players from '../data/players.json'
 
-// let playersCopy = players.copy()
-const getMinPower = (obj) => {
+const getMinPower = (arr) => {
     let min = 1000;
     let minPlayerKey;
-    Object.keys(obj).forEach(function (key, index) {
-        if (obj[key].totalPower < min) {
-            minPlayerKey = key;
-            min = obj[key].totalPower;
+    arr.map((ele, index) => {
+        if (ele.total < min) {
+            minPlayerKey = index;
+            min = ele.total;
         }
     });
     return minPlayerKey
 
 }
-const getMaxPower = (obj) => {
+const getMaxPower = (arr) => {
     let max = 0;
     let maxPlayerKey;
-    Object.keys(obj).forEach(function (key, index) {
-        if (obj[key].totalPower > max) {
-            maxPlayerKey = key;
-            max = obj[key].totalPower;
+    arr.map((ele, index) => {
+        if (ele.total > max) {
+            maxPlayerKey = index;
+            max = ele.total;
         }
     });
     return maxPlayerKey
 
 }
 
-export const teamBuilder = (nTeam, teamSize) => {
+export const teamBuilder = (players, nTeam, teamSize) => {
     let teams = [[], [], [], []];
-    const nPlayers = Object.keys(players).length;
-    let allPlayers = structuredClone(players);
+    const nPlayers = players.length;
+    let allPlayers = players.slice();
     let minSwitch = true;
     for (let p = 0; p < nPlayers; p++) {
         for (let t = 0; t < nTeam; t++) {
-            let len = Object.keys(allPlayers).length;
+            let len = allPlayers.length;
             if (len > 0 && teams[t].length < teamSize) {
 
                 if (minSwitch) {
                     let minK = getMinPower(allPlayers);
                     teams[t].push(allPlayers[minK]);
-                    delete allPlayers[minK];
+                    allPlayers.splice(minK, 1)
+
                 } else {
-                    let minK = getMaxPower(allPlayers);
-                    teams[t].push(allPlayers[minK]);
-                    delete allPlayers[minK];
+                    let maxK = getMaxPower(allPlayers);
+                    teams[t].push(allPlayers[maxK]);
+                    allPlayers.splice(maxK, 1)
                 }
             }
         }
@@ -59,29 +58,35 @@ export const teamBuilder = (nTeam, teamSize) => {
 export const teamTotalPower = (team) => {
     const teamSize = team.length;
     let totalPower = 0;
+    console.log("team");
+    console.log(team);
     team.map((player, index) => {
-        totalPower += player.totalPower;
+        totalPower += player.total;
     });
     return parseInt(totalPower / teamSize);
 }
 
 // ==================
-const randomPick = function (obj) {
-    var keys = Object.keys(obj);
+const randomPickObject = function (obj) {
+    let keys = Object.keys(obj);
     // return obj[keys[keys.length * Math.random() << 0]];
     return keys[keys.length * Math.random() << 0];
 };
-export const teamBuilderRandom = (nTeam, teamSize) => {
+const randomPickArray = function (arr) {
+    const random = Math.floor(Math.random() * arr.length);
+    return random;
+};
+export const teamBuilderRandom = (players, nTeam, teamSize) => {
     let teams = [[], [], [], []];
-    const nPlayers = Object.keys(players).length;
-    let allPlayers = structuredClone(players);
+    const nPlayers = players.length;
+    let allPlayers = players.slice();
     for (let p = 0; p < nPlayers; p++) {
         for (let t = 0; t < nTeam; t++) {
-            let len = Object.keys(allPlayers).length;
+            let len = allPlayers.length;
             if (len > 0 && teams[t].length < teamSize) {
-                let rKey = randomPick(allPlayers);
+                let rKey = randomPickArray(allPlayers);
                 teams[t].push(allPlayers[rKey]);
-                delete allPlayers[rKey];
+                allPlayers.splice(rKey, 1)
             }
         }
     }

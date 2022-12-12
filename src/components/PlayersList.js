@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect, useContext } from "react";
 import {
     Button,
     Dialog,
@@ -7,17 +7,38 @@ import {
     DialogFooter,
     Typography
 } from "@material-tailwind/react";
-
+// import { players } from "../data/players.js"
+import PlayersConfig from "../context/PlayersConfig";
+import axios from "axios";
 const PlayersList = () => {
-    const [open, setOpen] = useState(false);
+    const { players, setPlayers } = useContext(PlayersConfig);
 
+    const [open, setOpen] = useState(false);
+    // const [players, setPlayers] = useState([]);
     const handleOpen = () => setOpen(!open);
+    const fetchAllPlayers = async () => {
+        try {
+            const res = await axios.get("http://192.168.0.101:8800/players");
+            setPlayers(res.data);
+        } catch (err) {
+            // alert("Something went wrong get");
+            console.log(err);
+        }
+    };
+    const handleDelete = async (id) => {
+        try {
+            await axios.delete(`http://192.168.0.101:8800/players/${id}`);
+            // window.location.reload()
+            fetchAllPlayers();
+            alert("Done");
+        } catch (err) {
+            console.log(err);
+            // alert("Something went wrong delete");
+        }
+    };
 
     return (
         <Fragment>
-            {/* <Button onClick={handleOpen} variant="gradient">
-                Open Dialog
-            </Button> */}
             <Typography
                 as="li"
                 variant="small"
@@ -29,13 +50,14 @@ const PlayersList = () => {
                     Players
                 </p>
             </Typography>
-            <Dialog open={open} handler={handleOpen} size="xl" className="lg:h-fit h-136 overflow-auto">
+            <Dialog open={open} handler={handleOpen} size="xl" className="lg:h-4/5 h-4/5 overflow-y-scroll">
                 <DialogHeader>Players</DialogHeader>
                 <DialogBody divider>
 
-                    <table className="border-collapse w-full">
+                    <table className="border-collapse w-full h-full">
                         <thead>
                             <tr>
+                                <th className="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">#ID</th>
                                 <th className="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">Name</th>
                                 <th className="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">Total Power</th>
                                 <th className="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">Status</th>
@@ -43,82 +65,43 @@ const PlayersList = () => {
                             </tr>
                         </thead>
                         <tbody className="">
-                            <tr className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0">
-                                <td className="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
-                                    <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Name</span>
-                                    KnobHome
-                                </td>
-                                <td className="w-full lg:w-auto p-3 text-gray-800 border border-b text-center block lg:table-cell relative lg:static">
-                                    <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Total Power</span>
-                                    German
-                                </td>
-                                <td className="w-full lg:w-auto p-3 text-gray-800  border border-b text-center block lg:table-cell relative lg:static">
-                                    <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Status</span>
-                                    <span className="rounded bg-red-400 py-1 px-3 text-xs font-bold">deleted</span>
-                                </td>
-                                <td className="w-full lg:w-auto p-3 text-gray-800  border border-b text-center block lg:table-cell relative lg:static">
-                                    <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Actions</span>
-                                    <p className="cursor-pointer text-blue-400 hover:text-blue-600 underline">Edit</p>
-                                    <p className="cursor-pointer text-blue-400 hover:text-blue-600 underline pl-6">Remove</p>
-                                </td>
-                            </tr>
-                            <tr className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0">
-                                <td className="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
-                                    <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Company name</span>
-                                    Squary
-                                </td>
-                                <td className="w-full lg:w-auto p-3 text-gray-800 border border-b text-center block lg:table-cell relative lg:static">
-                                    <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Country</span>
-                                    Schweden
-                                </td>
-                                <td className="w-full lg:w-auto p-3 text-gray-800 border border-b text-center block lg:table-cell relative lg:static">
-                                    <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Status</span>
-                                    <span className="rounded bg-green-400 py-1 px-3 text-xs font-bold">Available</span>
-                                </td>
-                                <td className="w-full lg:w-auto p-3 text-gray-800 border border-b text-center block lg:table-cell relative lg:static">
-                                    <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Actions</span>
-                                    <p className="cursor-pointer text-blue-400 hover:text-blue-600 underline">Edit</p>
-                                    <p className="cursor-pointer text-blue-400 hover:text-blue-600 underline pl-6">Remove</p>
-                                </td>
-                            </tr>
-                            <tr className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0">
-                                <td className="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
-                                    <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Company name</span>
-                                    ghome
-                                </td>
-                                <td className="w-full lg:w-auto p-3 text-gray-800 border border-b text-center block lg:table-cell relative lg:static">
-                                    <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Country</span>
-                                    Switzerland
-                                </td>
-                                <td className="w-full lg:w-auto p-3 text-gray-800 border border-b text-center block lg:table-cell relative lg:static">
-                                    <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Status</span>
-                                    <span className="rounded bg-yellow-400 py-1 px-3 text-xs font-bold">Unavailable</span>
-                                </td>
-                                <td className="w-full lg:w-auto p-3 text-gray-800 border border-b text-center block lg:table-cell relative lg:static">
-                                    <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Actions</span>
-                                    <p className="cursor-pointer text-blue-400 hover:text-blue-600 underline">Edit</p>
-                                    <p className="cursor-pointer text-blue-400 hover:text-blue-600 underline pl-6">Remove</p>
-                                </td>
-                            </tr>
-                            <tr className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0">
-                                <td className="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
-                                    <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Company name</span>
-                                    ghome
-                                </td>
-                                <td className="w-full lg:w-auto p-3 text-gray-800 border border-b text-center block lg:table-cell relative lg:static">
-                                    <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Country</span>
-                                    Switzerland
-                                </td>
-                                <td className="w-full lg:w-auto p-3 text-gray-800 border border-b text-center block lg:table-cell relative lg:static">
-                                    <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Status</span>
-                                    <span className="rounded bg-yellow-400 py-1 px-3 text-xs font-bold">Unavailable</span>
-                                </td>
-                                <td className="w-full lg:w-auto p-3 text-gray-800 border border-b text-center block lg:table-cell relative lg:static">
-                                    <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Actions</span>
-                                    <p className="cursor-pointer text-blue-400 hover:text-blue-600 underline">Edit</p>
-                                    <p className="cursor-pointer text-blue-400 hover:text-blue-600 underline pl-6">Remove</p>
-                                </td>
-                            </tr>
+
+                            {
+
+                                players.map((player, index) => (
+                                    <tr key={index} className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0">
+                                        <td className="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
+                                            <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">#ID</span>
+                                            {index + 1}
+                                        </td>
+                                        <td className="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
+                                            <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Name</span>
+                                            {player.name}
+                                        </td>
+                                        <td className="w-full lg:w-auto p-3 text-gray-800 border border-b text-center block lg:table-cell relative lg:static">
+                                            <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Total Power</span>
+                                            {player.total}
+                                        </td>
+                                        <td className="w-full lg:w-auto p-3 text-gray-800  border border-b text-center block lg:table-cell relative lg:static">
+                                            <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Status</span>
+                                            <span className={player.status ? "rounded bg-green-400 py-1 px-3 text-xs font-bold" : "rounded bg-red-400 py-1 px-3 text-xs font-bold"}>
+                                                {player.status ? "Available" : "Unavailable"}
+                                            </span>
+                                        </td>
+                                        <td className="w-full lg:w-auto p-3 text-gray-800  border border-b text-center block lg:table-cell relative lg:static">
+                                            <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Actions</span>
+                                            <p className="cursor-pointer text-blue-400 hover:text-blue-600 underline inline-block">Edit</p>
+                                            <p className="cursor-pointer text-blue-400 hover:text-blue-600 underline pl-6 inline-block"
+                                                onClick={() => handleDelete(player.id)}
+                                            >Remove</p>
+                                        </td>
+                                    </tr>
+                                ))
+                            }
+
+
+
+
                         </tbody>
                     </table>
 

@@ -2,7 +2,7 @@
 import './App.css';
 import Login from './components/Login';
 
-import { PlayerProvide } from './context/PlayerConfig';
+import { PlayersProvide } from './context/PlayersConfig';
 import { AppProvide } from './context/AppConfig';
 import Fantasy from './components/Fantasy';
 
@@ -16,10 +16,10 @@ function App() {
         {/* <Login /> */}
 
 
-        <PlayerProvide >
+        <PlayersProvide >
           <Fantasy />
 
-        </PlayerProvide>
+        </PlayersProvide>
 
 
       </AppProvide>

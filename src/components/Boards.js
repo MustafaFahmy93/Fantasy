@@ -8,28 +8,51 @@ import {
 } from "@material-tailwind/react";
 
 import { BsChevronCompactLeft, BsChevronCompactRight } from "react-icons/bs";
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import PlayerAvatar from "./PlayerAvatar";
 import format from "../data/fantacy.json";
-import players from "../data/players.json";
+// import players from "../data/players.json";
 import AppConfig from "../context/AppConfig";
 import { motion } from "framer-motion";
 import { teamBuilder, teamBuilderRandom, teamTotalPower } from '../fantasy/teams'
-
+import PlayersConfig from "../context/PlayersConfig";
+let teams = [[], [], [], [], []]
 const Boards = () => {
-    const { config } = useContext(AppConfig);
+    const { config, setBuildTeams } = useContext(AppConfig);
+    const { players } = useContext(PlayersConfig);
     const teamSize = config.teamSize;
     const nTeams = config.nTeams;
     // const TeamFormats = ["1", "2", "1"];
-    const teams = teamBuilder(nTeams, teamSize);
-    // const teams = teamBuilderRandom(3, 5);
+    console.log(["buildTeams", config.buildTeams])
+    if (config.buildTeams && players.length > 0) {
+        if (config.mode === 1) {
+            teams = teamBuilderRandom(players, nTeams, teamSize);
+            setBuildTeams(false);
+        }
+        else if (config.mode === 2) {
+            teams = teamBuilder(players, nTeams, teamSize);
+            setBuildTeams(false);
+        }
+        else if (config.mode === 3) {
+            // const teams = teamBuilderRandom(3, 5);
+        }
+    }
+
+
+
+
+    console.log("teams");
+    console.log(teams);
+
     const [formatChange, setFormat] = useState(0)
     const [teamIndex, setTeamIndex] = useState(0)
     const [btnRight, setBtnRight] = useState(true);
     const [btnLeft, setBtnLeft] = useState(false);
     const teamA = teams[teamIndex];
-    console.log(teamA);
+    // console.log("teamA");
+    // console.log(teamA);
     const teamPower = teamTotalPower(teamA);
+    // const teamPower = 0;
     let playerNaumber = 0;
     const handleChangeTeam = (dir) => {
         let newTeamIndex = teamIndex;
@@ -65,8 +88,7 @@ const Boards = () => {
             }
         }
     }
-    // console.log(teamTotalPower(teams[0]));
-    // console.log(teamA[0]);
+
     const teamFormat = {
         "11": ["4-3-3", "5-3-2", "0-0"],
         "5": ["3-1", "2-2", "0-0",]
@@ -85,11 +107,7 @@ const Boards = () => {
         },
         hidden: { opacity: 0 },
     }
-    const getNewplayer = () => {
-        if (playerNaumber + 1 < teamA.length) {
-            playerNaumber++
-        }
-    }
+
     return (
         <div className="flex justify-center relative top-12 text-white">
 
@@ -121,29 +139,27 @@ const Boards = () => {
                         variants={list}
                         key={Math.random()}
                         className="text-center board">
-                        {/* className="text-center bg-[url('/src/assets/img/board2.png')] board"> */}
+
 
                         {
 
+
                             format.format[teamSize][teamFormat[teamSize][formatChange]].map((row, rowIndex) => (
 
-                                <div id="notif"
+                                <div
                                     key={Math.random()}
                                     className={teamStyle[teamSize]}>
                                     {
-                                        console.log(playerNaumber)
-                                    }
-                                    {
                                         row.map((player, index) => (
-                                            <PlayerAvatar key={Math.random()} name={teamA[playerNaumber].name} tPower={teamA[playerNaumber].totalPower}>
-                                                {
-                                                    getNewplayer()
 
-
-                                                }
+                                            teamA.length > playerNaumber &&
+                                            <PlayerAvatar key={Math.random()} name={teamA[playerNaumber].name} tPower={teamA[playerNaumber].total}>
+                                                {playerNaumber++}
                                             </PlayerAvatar>
 
-                                        ))
+
+                                        )
+                                        )
                                     }
                                 </div>
                             ))

@@ -7,7 +7,9 @@ export function AppProvide({ children }) {
         user: "admin",
         pass: "admin",
         teamSize: "5",
-        nTeams: "3",
+        nTeams: "2",
+        mode: 2, // balance
+        buildTeams: true,
 
     }
     // App Config
@@ -19,20 +21,34 @@ export function AppProvide({ children }) {
         setConfig((prevState) => {
             return { ...prevState, isLogin: auth }
         });
+
     };
     const setTeamSize = (sizw) => {
         setConfig((prevState) => {
             return { ...prevState, teamSize: sizw }
         });
+        setBuildTeams(true);
     };
     const setNTeams = (num) => {
         setConfig((prevState) => {
             return { ...prevState, nTeams: num }
         });
+        setBuildTeams(true);
+    };
+    const setMode = (mode) => {
+        setConfig((prevState) => {
+            return { ...prevState, mode: mode }
+        });
+        setBuildTeams(true);
+    };
+    const setBuildTeams = (value) => {
+        setConfig((prevState) => {
+            return { ...prevState, buildTeams: value }
+        });
     };
 
     const methods = {
-        config, resetConfig, setLogin, setTeamSize, setNTeams
+        config, resetConfig, setLogin, setTeamSize, setNTeams, setMode, setBuildTeams
     }
 
     return (

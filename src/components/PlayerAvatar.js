@@ -3,7 +3,7 @@ import { Avatar } from "@material-tailwind/react";
 import playerAvater from "../assets/img/13_1.png"
 
 import { motion } from "framer-motion"
-const PlayerAvatar = ({ name, tPower, index }) => {
+const PlayerAvatar = ({ name, tPower }) => {
     const item = {
         visible: {
             opacity: 1, y: 0,
@@ -13,6 +13,7 @@ const PlayerAvatar = ({ name, tPower, index }) => {
         },
         hidden: { opacity: 0, y: -100 },
     }
+    // console.log(["name", name]);
     return (
 
         <motion.div
