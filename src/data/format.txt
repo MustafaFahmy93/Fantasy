@@ -32,3 +32,29 @@ admin
     0   right
 left 1 right
 left 2 
+
+
+PACE
+SHOOTING
+PASSING
+DRIBBLING
+DEFENDING
+PHYSICALITY
+
+
+pace
+shooting
+passing
+dribbling
+defending
+physicality
+
+
+
+toDo
+1- avatar color
+2- update form
+Done 3- mode captain open dialog
+Done 4- choose captains the same number of teams
+Done 5- algorithm captain
+Done 6- team name (captain or the most powerful player) 

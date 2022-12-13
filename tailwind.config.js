@@ -64,11 +64,16 @@ module.exports = withMT({
         //   "url('https://i.ibb.co/MkvLDfb/Rectangle-4389.png')",
         'board':
           "url('//src/assets/img/board.png')",
+        "tcolor-black": "url('//src/assets/img/black.png')",
+
       },
       spacing: {
         '112': '28rem',
         '128': '32rem',
         '136': '37rem',
+      },
+      zIndex: {
+        '100000': '100000',
       }
     },
   },

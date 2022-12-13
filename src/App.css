@@ -39,3 +39,12 @@
     background-color: rgb(75,177,117, 0.2);
     color: #fff;
 }
+
+.input-range-red{
+    accent-color: #F55050;
+}
+
+.list-show ul {
+    position: relative !important;
+    top : 0 !important;
+}

@@ -1,18 +1,22 @@
 
 import AppConfig from "../context/AppConfig";
 import { useContext, useEffect } from 'react';
+// import { useContext } from 'react';
 import Nav from '../components/Nav';
 import Boards from '../components/Boards';
 import { Select, Option } from "@material-tailwind/react";
 import PlayersConfig from "../context/PlayersConfig";
 import axios from "axios";
+import Captains from "./Captains";
 const Fantasy = () => {
-    const { config, setTeamSize, setNTeams, setMode } = useContext(AppConfig);
-    const { setPlayers } = useContext(PlayersConfig);
+    const { config, setTeamSize, setNTeams } = useContext(AppConfig);
+    const { LoadPlayers } = useContext(PlayersConfig);
     const fetchAllPlayers = async () => {
         try {
-            const res = await axios.get("http://192.168.0.101:8800/players");
-            setPlayers(res.data);
+            const res = await axios.get("https://x-tend.solutions/fantasy/api/");
+            LoadPlayers(res.data);
+            // console.log("res.data");
+            // console.log(res.data);
         } catch (err) {
             // alert("Something went wrong get");
             console.log(err);
@@ -36,13 +40,8 @@ const Fantasy = () => {
                         <div className="lg:flex-grow md:w-1/3 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center">
                             <div className="container py-10 px-10 mx-0 min-w-full flex flex-col space-y-2 items-center">
                                 <h2 className="text-white text-5xl mb-3 font-app text-center">Setup</h2>
-                                <div className="w-72">
-                                    <Select label="Mode" className="text-white" value={"Balance"}>
-                                        <Option onClick={() => setMode(1)}>Random</Option>
-                                        <Option value={"Balance"} onClick={() => setMode(2)}>Balance</Option>
-                                        <Option onClick={() => setMode(3)}>Leaders with Random</Option>
-                                    </Select>
-                                </div>
+
+                                <Captains />
                                 <div className="w-72">
                                     <Select label="Number of teams" className="text-white" value={config.nTeams}>
                                         <Option value={"2"} onClick={() => setNTeams("2")}>2</Option>

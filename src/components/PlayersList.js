@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect, useContext } from "react";
+import { Fragment, useState, useContext } from "react";
 import {
     Button,
     Dialog,
@@ -10,31 +10,46 @@ import {
 // import { players } from "../data/players.js"
 import PlayersConfig from "../context/PlayersConfig";
 import axios from "axios";
+import UpdatePlayer from "./UpdatePlayer";
+import AppConfig from "../context/AppConfig";
 const PlayersList = () => {
-    const { players, setPlayers } = useContext(PlayersConfig);
+    const { players, LoadPlayers } = useContext(PlayersConfig);
+    const { setBuildTeams } = useContext(AppConfig);
 
     const [open, setOpen] = useState(false);
     // const [players, setPlayers] = useState([]);
-    const handleOpen = () => setOpen(!open);
+    const handleOpen = () => {
+        // alert("done")
+        setOpen(!open)
+    };
     const fetchAllPlayers = async () => {
         try {
-            const res = await axios.get("http://192.168.0.101:8800/players");
-            setPlayers(res.data);
+            const res = await axios.get("https://x-tend.solutions/fantasy/api/");
+            LoadPlayers(res.data);
+
         } catch (err) {
             // alert("Something went wrong get");
             console.log(err);
         }
     };
     const handleDelete = async (id) => {
-        try {
-            await axios.delete(`http://192.168.0.101:8800/players/${id}`);
-            // window.location.reload()
-            fetchAllPlayers();
-            alert("Done");
-        } catch (err) {
-            console.log(err);
-            // alert("Something went wrong delete");
+        if (window.confirm('Are you sure?')) {
+            try {
+                // await axios.delete(`https://x-tend.solutions/fantasy/api/${id}`);
+                await axios.delete("https://x-tend.solutions/fantasy/api/", { data: { id: id }, headers: { "Authorization": "***" } });
+
+                // window.location.reload()
+                await fetchAllPlayers();
+                alert("Done");
+                setBuildTeams(true);
+
+
+            } catch (err) {
+                console.log(err);
+                // alert("Something went wrong delete");
+            }
         }
+
     };
 
     return (
@@ -44,14 +59,33 @@ const PlayersList = () => {
                 variant="small"
                 color="white"
                 className="p-1 font-normal"
-                onClick={handleOpen}
+                onClick={() => {
+
+                    fetchAllPlayers()
+                    handleOpen()
+                }
+
+                }
             >
-                <p className="cursor-pointer flex items-center cursor-pointer">
+                <p className="cursor-pointer flex items-center">
                     Players
                 </p>
             </Typography>
-            <Dialog open={open} handler={handleOpen} size="xl" className="lg:h-4/5 h-4/5 overflow-y-scroll">
-                <DialogHeader>Players</DialogHeader>
+            <Dialog open={open} handler={handleOpen} size="xl"
+                className="lg:max-w-[50%]  lg:min-w-[50%] lg:max-h-[75%] lg:h-fit max-h-[90%] h-fit overflow-y-scroll"
+                dismiss={
+                    {
+                        enabled: false,
+                        escapeKey: false,
+                        referencePointerDown: false,
+                        outsidePointerDown: false,
+                        ancestorScroll: false,
+                        bubbles: false,
+                    }
+
+                }
+            >
+                <DialogHeader>Players list</DialogHeader>
                 <DialogBody divider>
 
                     <table className="border-collapse w-full h-full">
@@ -59,7 +93,7 @@ const PlayersList = () => {
                             <tr>
                                 <th className="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">#ID</th>
                                 <th className="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">Name</th>
-                                <th className="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">Total Power</th>
+                                <th className="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">Overall</th>
                                 <th className="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">Status</th>
                                 <th className="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">Actions</th>
                             </tr>
@@ -79,18 +113,26 @@ const PlayersList = () => {
                                             {player.name}
                                         </td>
                                         <td className="w-full lg:w-auto p-3 text-gray-800 border border-b text-center block lg:table-cell relative lg:static">
-                                            <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Total Power</span>
+                                            <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Overall</span>
                                             {player.total}
                                         </td>
                                         <td className="w-full lg:w-auto p-3 text-gray-800  border border-b text-center block lg:table-cell relative lg:static">
                                             <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Status</span>
                                             <span className={player.status ? "rounded bg-green-400 py-1 px-3 text-xs font-bold" : "rounded bg-red-400 py-1 px-3 text-xs font-bold"}>
-                                                {player.status ? "Available" : "Unavailable"}
+                                                {/* {player.status === 1 ? "Available" : "Unavailable"} */}
+                                                {player.status === 1 && "Available"}
+                                                {player.status === 0 && "Unavailable"}
                                             </span>
                                         </td>
                                         <td className="w-full lg:w-auto p-3 text-gray-800  border border-b text-center block lg:table-cell relative lg:static">
                                             <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Actions</span>
-                                            <p className="cursor-pointer text-blue-400 hover:text-blue-600 underline inline-block">Edit</p>
+                                            <div onClick={() => (0)}
+                                                className="inline-block"
+                                            >
+
+                                                <UpdatePlayer playerAppId={index} />
+                                            </div>
+
                                             <p className="cursor-pointer text-blue-400 hover:text-blue-600 underline pl-6 inline-block"
                                                 onClick={() => handleDelete(player.id)}
                                             >Remove</p>

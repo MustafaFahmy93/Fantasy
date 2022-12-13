@@ -14,7 +14,7 @@ const getMinPower = (arr) => {
 }
 const getMaxPower = (arr) => {
     let max = 0;
-    let maxPlayerKey;
+    let maxPlayerKey = -1;
     arr.map((ele, index) => {
         if (ele.total > max) {
             maxPlayerKey = index;
@@ -24,11 +24,23 @@ const getMaxPower = (arr) => {
     return maxPlayerKey
 
 }
-
+export const playersFilter = (players) => {
+    let playersFilterd = [];
+    players.map((player, index) => {
+        if (player.status === 1) {
+            playersFilterd.push(player);
+        }
+    })
+    return playersFilterd;
+}
 export const teamBuilder = (players, nTeam, teamSize) => {
-    let teams = [[], [], [], []];
-    const nPlayers = players.length;
-    let allPlayers = players.slice();
+    nTeam = parseInt(nTeam);
+    teamSize = parseInt(teamSize);
+    let playersFilterd = playersFilter(players);
+    let teams = [[], [], [], [], []];
+    const nPlayers = playersFilterd.length;
+    let allPlayers = playersFilterd.slice();
+    // console.log(playersFilterd);
     let minSwitch = true;
     for (let p = 0; p < nPlayers; p++) {
         for (let t = 0; t < nTeam; t++) {
@@ -55,11 +67,11 @@ export const teamBuilder = (players, nTeam, teamSize) => {
 }
 
 
-export const teamTotalPower = (team) => {
-    const teamSize = team.length;
+export const teamTotalPower = (team, teamSize) => {
+    // const teamSize = team.length;
     let totalPower = 0;
-    console.log("team");
-    console.log(team);
+    // console.log("team");
+    // console.log(team);
     team.map((player, index) => {
         totalPower += player.total;
     });
@@ -77,9 +89,56 @@ const randomPickArray = function (arr) {
     return random;
 };
 export const teamBuilderRandom = (players, nTeam, teamSize) => {
-    let teams = [[], [], [], []];
+    nTeam = parseInt(nTeam);
+    teamSize = parseInt(teamSize);
+    let playersFilterd = playersFilter(players);
+    let teams = [[], [], [], [], []];
+    const nPlayers = playersFilterd.length;
+    let allPlayers = playersFilterd.slice();
+    for (let p = 0; p < nPlayers; p++) {
+        for (let t = 0; t < nTeam; t++) {
+            let len = allPlayers.length;
+            if (len > 0 && teams[t].length < teamSize) {
+                let rKey = randomPickArray(allPlayers);
+                teams[t].push(allPlayers[rKey]);
+                allPlayers.splice(rKey, 1)
+            }
+        }
+    }
+
+    // console.log(teams);
+    return teams;
+}
+// Captains 
+const removeCaptains = (players, captainsId) => {
+    let newPlayers = [];
+    let captainsData = [];
     const nPlayers = players.length;
-    let allPlayers = players.slice();
+    // console.log(["captains", captainsId]);
+    for (let p = 0; p < nPlayers; p++) {
+
+        if (!captainsId.includes(players[p].id)) {
+            newPlayers.push(players[p]);
+        } else {
+            captainsData.push(players[p]);
+        }
+    }
+
+    return [newPlayers, captainsData];
+}
+export const teamBuilderCaptainsRandom = (players, captainsId, nTeam, teamSize) => {
+    nTeam = parseInt(nTeam);
+    teamSize = parseInt(teamSize);
+    let playersFilterd = playersFilter(players);
+    let teams = [[], [], [], [], []];
+    let [newPlayers, captainsData] = removeCaptains(playersFilterd, captainsId)
+    // add captains
+    for (let index = 0; index < nTeam; index++) {
+        teams[index].push(captainsData[index]);
+    }
+    // console.log(["newPlayers", newPlayers]);
+    const nPlayers = newPlayers.length;
+    let allPlayers = newPlayers.slice();
     for (let p = 0; p < nPlayers; p++) {
         for (let t = 0; t < nTeam; t++) {
             let len = allPlayers.length;
@@ -95,6 +154,26 @@ export const teamBuilderRandom = (players, nTeam, teamSize) => {
     return teams;
 }
 
+
+
+// ====================================
+export const getTeamName = (team, captainsId) => {
+    let [newPlayers, captains] = removeCaptains(team, captainsId)
+    // console.log(["getTeamName", newPlayers, captains]);
+    if (captains.length > 0) {
+
+        return captains[0].name
+    } else {
+        let maxPlayerKey = getMaxPower(team);
+        if (maxPlayerKey > -1) {
+            return team[maxPlayerKey].name
+        } else {
+            return "X"
+        }
+
+    }
+
+}
 const teams = () => {
 
 

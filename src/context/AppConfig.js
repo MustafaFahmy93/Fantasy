@@ -10,6 +10,7 @@ export function AppProvide({ children }) {
         nTeams: "2",
         mode: 2, // balance
         buildTeams: true,
+        captainsId: []
 
     }
     // App Config
@@ -33,7 +34,9 @@ export function AppProvide({ children }) {
         setConfig((prevState) => {
             return { ...prevState, nTeams: num }
         });
-        setBuildTeams(true);
+        if (config.mode !== 3) {
+            setBuildTeams(true);
+        }
     };
     const setMode = (mode) => {
         setConfig((prevState) => {
@@ -46,9 +49,18 @@ export function AppProvide({ children }) {
             return { ...prevState, buildTeams: value }
         });
     };
+    const setCaptains = (captains) => {
+
+        setConfig((prevState) => {
+            return { ...prevState, captainsId: captains }
+        });
+    };
+
 
     const methods = {
-        config, resetConfig, setLogin, setTeamSize, setNTeams, setMode, setBuildTeams
+        config, resetConfig, setLogin, setTeamSize, setNTeams, setMode, setBuildTeams,
+        setCaptains
+
     }
 
     return (

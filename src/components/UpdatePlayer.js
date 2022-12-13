@@ -7,57 +7,70 @@ import {
     DialogBody,
     DialogFooter,
     Switch,
-    Select, Option
+    Option,
+    Select
 } from "@material-tailwind/react";
 import axios from "axios";
 import InputRange from "./InputRange";
 import PlayersConfig from "../context/PlayersConfig";
 import AppConfig from "../context/AppConfig";
-const AddPlayer = ({ btnStyle }) => {
-    const { player, LoadPlayers, resetPlayer, setName, setStatus, setTcolor, setPace, setShooting, setPassing, setDribbling, setDefending, setPhysicality } = useContext(PlayersConfig);
-    const { setBuildTeams } = useContext(AppConfig);
-
+const UpdatePlayer = ({ playerAppId }) => {
+    // const { players, setPlayers, player, setPlayer, setName, setPace, setShooting, setPassing, setDribbling, setDefending, setPhysicality } = useContext(PlayersConfig);
+    const { players, player, resetPlayer, LoadPlayers, LoadPlayer, setName, setStatus, setTcolor, setPace, setShooting, setPassing, setDribbling, setDefending, setPhysicality } = useContext(PlayersConfig);
+    const { config, setNTeams, setBuildTeams } = useContext(AppConfig);
     const [open, setOpen] = useState(false);
+
     const handleOpen = () => {
-        resetPlayer()
+        // console.log(["Player", playerAppId])
+        // console.log(players)
+        // console.log(players[playerAppId])
+        // setPlayer(players[playerAppId])
+        LoadPlayer(players[playerAppId])
         setOpen(!open)
     };
+
     const setPlayername = (e) => {
         const { value } = e.target;
         // console.log(value);
-
         setName(value);
     }
     const fetchAllPlayers = async () => {
         try {
             const res = await axios.get("https://x-tend.solutions/fantasy/api/");
             LoadPlayers(res.data);
+            alert("Done");
+
         } catch (err) {
             // alert("Something went wrong get");
             console.log(err);
         }
     };
-    const handleAddPlayer = async (e) => {
+
+    const handleUpdatePlayer = async (e) => {
         e.preventDefault();
+
         try {
-            // console.log("add player");
-            // console.log(player);
-            await axios.post("https://x-tend.solutions/fantasy/api/", player);
-            alert(player.name + " has been added to the players list");
-            resetPlayer();
+            // await axios.put(`https://x-tend.solutions/fantasy/api/${player.id}`, player);
+
+            await axios.put(`https://x-tend.solutions/fantasy/api/`, player);
+            // navigate("/");
             await fetchAllPlayers();
+            // setNTeams(config.nTeams);
             setBuildTeams(true);
+            // handleOpen();
         } catch (err) {
             console.log(err);
-            // alert("Something went wrong");
-            // setError(true)
+            // setError(true);
         }
     };
     return (
         <Fragment>
-            <Button onClick={handleOpen} variant="gradient" className={btnStyle} color="indigo">
-                Add Player
-            </Button>
+            <p className="cursor-pointer text-blue-400 hover:text-blue-600 underline inline-block"
+                onClick={handleOpen}
+            >Edit</p>
+            {/* <Button onClick={handleOpen} variant="gradient" className={btnStyle} color="indigo">
+                Update Player
+            </Button> */}
             <Dialog open={open} handler={handleOpen} size="xl"
                 className="lg:max-w-[50%]  lg:min-w-[50%] lg:h-fit h-4/5 lg:overflow-hidden overflow-y-scroll"
                 dismiss={
@@ -79,12 +92,12 @@ const AddPlayer = ({ btnStyle }) => {
                             <Input label="Name" onChange={(e) => setPlayername(e)} value={player.name} />
                         </div>
                         <div className="lg:w-4/12 w-9/12">
-                            <Select label="T-Shirt" value={"black"}>
+                            <Select label="T-Shirt" value={player.tcolor}>
                                 <Option onClick={() => setTcolor("black")} value={"black"}><p className="text-gray-900">Black</p></Option>
-                                <Option onClick={() => setTcolor("white")}><p className="text-gray-600">White</p></Option>
-                                <Option onClick={() => setTcolor("red")}><p className="text-red-900">Red</p></Option>
-                                <Option onClick={() => setTcolor("blue")}><p className="text-light-blue-700">Blue</p></Option>
-                                <Option onClick={() => setTcolor("black-white")}><p className="text-gray-900 inline-block">Black-</p><p className="text-gray-600 inline-block">White</p></Option>
+                                <Option onClick={() => setTcolor("white")} value={"white"}><p className="text-gray-600">White</p></Option>
+                                <Option onClick={() => setTcolor("red")} value={"red"}><p className="text-red-900">Red</p></Option>
+                                <Option onClick={() => setTcolor("blue")} value={"blue"}><p className="text-light-blue-700">Blue</p></Option>
+                                <Option onClick={() => setTcolor("black-white")} value={"black-white"}><p className="text-gray-900 inline-block">Black-</p><p className="text-gray-600 inline-block">White</p></Option>
                             </Select>
                         </div>
                         <div className="flex flex-col w-3/12 items-center h-2 bottom-2 relative pl-3 pt-1">
@@ -117,18 +130,21 @@ const AddPlayer = ({ btnStyle }) => {
                     <Button
                         variant="text"
                         color="red"
-                        onClick={handleOpen}
+                        onClick={() => {
+                            resetPlayer()
+                            handleOpen()
+                        }}
                         className="mr-1"
                     >
                         <span>Cancel</span>
                     </Button>
-                    <Button variant="gradient" color="green" onClick={handleAddPlayer}>
-                        <span>Add</span>
+                    <Button variant="gradient" color="blue" onClick={handleUpdatePlayer}>
+                        <span>Update</span>
                     </Button>
                 </DialogFooter>
             </Dialog>
-        </Fragment>
+        </Fragment >
     );
 }
 
-export default AddPlayer
+export default UpdatePlayer
