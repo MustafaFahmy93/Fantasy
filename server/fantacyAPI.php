@@ -1,10 +1,5 @@
 <?php
 // SET HEADER
-// header("Access-Control-Allow-Origin: *");
-// header("Access-Control-Allow-Headers: access");
-// header("Access-Control-Allow-Methods: *");
-// header("Access-Control-Allow-Credentials: true");
-// header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: *");
 header("Access-Control-Allow-Methods: *");
@@ -12,12 +7,10 @@ header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 // ini_set('display_errors', 'On');
-// INCLUDING DATABASE AND MAKING OBJECT
+
 require 'database.php';
 $db_connection = new Database();
 $conn = $db_connection->dbConnection();
-
-
 
 
 function get() {
@@ -75,8 +68,6 @@ function post() {
     // GET DATA FORM REQUEST
 $data = json_decode(file_get_contents("php://input"));
 
-// var_dump($_POST);
-// var_dump($data);
 //CREATE MESSAGE ARRAY AND SET EMPTY
 $msg['message'] = '';
 
@@ -119,9 +110,7 @@ function put() {
 $data = json_decode(file_get_contents("php://input"));
     //CHECKING, IF ID AVAILABLE ON $data
 if(isset($data->id)){
-//      if(isset($data->name) && isset($data->status) && isset($data->captain) && isset($data->pace)
-// && isset($data->shooting) && isset($data->passing) && isset($data->dribbling) && isset($data->defending) 
-// && isset($data->physicality) && isset($data->total) && isset($data->tcolor)
+    
     $msg['message'] = '';
     $player_id = $data->id;
     $update_stmt = $conn->prepare("UPDATE players 
