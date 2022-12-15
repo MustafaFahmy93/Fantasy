@@ -36,7 +36,8 @@ const Fantasy = () => {
 
                 <Nav />
                 <section>
-                    <div className="container mx-auto flex px-5 py-1 md:flex-row flex-col items-center">
+                    {/* <div className="container mx-auto flex px-5 xs:px-0 xs:mx-0 py-1 md:flex-row flex-col items-center"> */}
+                    <div className="container mx-auto flex md:flex-row flex-col items-center">
                         <div className="lg:flex-grow md:w-1/3 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center">
                             <div className="container py-10 px-10 mx-0 min-w-full flex flex-col space-y-2 items-center">
                                 <h2 className="text-white text-5xl mb-3 font-app text-center">Setup</h2>
@@ -59,7 +60,7 @@ const Fantasy = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="lg:max-w-lg lg:w-full md:w-2/3 w-96">
+                        <div className="lg:max-w-lg lg:w-full md:w-2/3 w-full">
 
 
 

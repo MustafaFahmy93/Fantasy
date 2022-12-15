@@ -11,7 +11,8 @@ module.exports = withMT({
       logo: ['Indie Flower'],
     },
     screens: {
-      sm: '480px',
+      xs: '375px',
+      sm: '425px',
       md: '768px',
       lg: '976px',
       xl: '1440px',

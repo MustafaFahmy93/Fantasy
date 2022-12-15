@@ -127,12 +127,13 @@ const removeCaptains = (players, captainsId) => {
     return [newPlayers, captainsData];
 }
 export const teamBuilderCaptainsRandom = (players, captainsId, nTeam, teamSize) => {
-    nTeam = parseInt(nTeam);
     teamSize = parseInt(teamSize);
     let playersFilterd = playersFilter(players);
     let teams = [[], [], [], [], []];
     let [newPlayers, captainsData] = removeCaptains(playersFilterd, captainsId)
+    nTeam = captainsData.length; //parseInt(nTeam);
     // add captains
+    // for (let index = 0; index < captainsData.length; index++) {
     for (let index = 0; index < nTeam; index++) {
         teams[index].push(captainsData[index]);
     }
@@ -173,6 +174,16 @@ export const getTeamName = (team, captainsId) => {
 
     }
 
+}
+
+// ====================================
+export const getPlayerInfo = (players, playerId) => {
+    const nPlayers = players.length;
+    for (let p = 0; p < nPlayers; p++) {
+        if (players[p].id === playerId) {
+            return players[p]
+        }
+    }
 }
 const teams = () => {
 

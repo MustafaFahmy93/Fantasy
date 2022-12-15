@@ -7,7 +7,7 @@ export function AppProvide({ children }) {
         user: "admin",
         pass: "admin",
         teamSize: "5",
-        nTeams: "2",
+        nTeams: "3",
         mode: 2, // balance
         buildTeams: true,
         captainsId: []

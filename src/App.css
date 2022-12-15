@@ -44,6 +44,10 @@
     accent-color: #F55050;
 }
 
+.playerCard input {
+    accent-color: yellowgreen;
+}
+
 .list-show ul {
     position: relative !important;
     top : 0 !important;

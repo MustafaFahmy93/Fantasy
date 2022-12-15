@@ -65,14 +65,14 @@ const UpdatePlayer = ({ playerAppId }) => {
     };
     return (
         <Fragment>
-            <p className="cursor-pointer text-blue-400 hover:text-blue-600 underline inline-block"
+            <p className="cursor-pointer text-blue-400 hover:text-blue-600 underline inline-block lg:top-0 relative top-2"
                 onClick={handleOpen}
             >Edit</p>
             {/* <Button onClick={handleOpen} variant="gradient" className={btnStyle} color="indigo">
                 Update Player
             </Button> */}
             <Dialog open={open} handler={handleOpen} size="xl"
-                className="lg:max-w-[50%]  lg:min-w-[50%] lg:h-fit h-4/5 lg:overflow-hidden overflow-y-scroll"
+                className="lg:max-w-[50%]  lg:min-w-[50%] lg:h-fit h-[75%] lg:overflow-hidden overflow-y-scroll"
                 dismiss={
                     {
                         enabled: false,
@@ -88,10 +88,10 @@ const UpdatePlayer = ({ playerAppId }) => {
                 <DialogHeader>Player Attributes</DialogHeader>
                 <DialogBody divider>
                     <div className="flex flex-wrap w-full">
-                        <div className="lg:w-4/12 w-full mr-3 lg:pb-0 pb-2">
+                        <div className="md:w-6/12 sm:w-full w-full md:pd-0 sm:pb-3 pb-3 sm:pr-3 pr-0">
                             <Input label="Name" onChange={(e) => setPlayername(e)} value={player.name} />
                         </div>
-                        <div className="lg:w-4/12 w-9/12">
+                        <div className="md:w-4/12 sm:w-9/12 w-full">
                             <Select label="T-Shirt" value={player.tcolor}>
                                 <Option onClick={() => setTcolor("black")} value={"black"}><p className="text-gray-900">Black</p></Option>
                                 <Option onClick={() => setTcolor("white")} value={"white"}><p className="text-gray-600">White</p></Option>
@@ -100,7 +100,7 @@ const UpdatePlayer = ({ playerAppId }) => {
                                 <Option onClick={() => setTcolor("black-white")} value={"black-white"}><p className="text-gray-900 inline-block">Black-</p><p className="text-gray-600 inline-block">White</p></Option>
                             </Select>
                         </div>
-                        <div className="flex flex-col w-3/12 items-center h-2 bottom-2 relative pl-3 pt-1">
+                        <div className="flex flex-col md:w-2/12 sm:w-3/12 w-full items-center relative md:left-4 left-0">
                             <label className="font-bold text-gray-900 text-center">
                                 Available
                             </label>

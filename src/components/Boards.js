@@ -161,9 +161,14 @@ const Boards = () => {
                                             row.map((player, index) => (
 
                                                 teamA.length > playerNaumber &&
-                                                <PlayerAvatar key={Math.random()} name={teamA[playerNaumber].name}
+                                                <PlayerAvatar
+                                                    key={Math.random()}
+                                                    // key={config.buildTeams ? Math.random() : teamA[playerNaumber].id}
+                                                    name={teamA[playerNaumber].name}
                                                     tColor={teamA[playerNaumber].tcolor}
-                                                    tPower={teamA[playerNaumber].total}>
+                                                    tPower={teamA[playerNaumber].total}
+                                                    playerId={teamA[playerNaumber].id}
+                                                >
                                                     {playerNaumber++}
                                                 </PlayerAvatar>
 

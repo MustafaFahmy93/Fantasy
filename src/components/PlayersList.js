@@ -72,7 +72,7 @@ const PlayersList = () => {
                 </p>
             </Typography>
             <Dialog open={open} handler={handleOpen} size="xl"
-                className="lg:max-w-[50%]  lg:min-w-[50%] lg:max-h-[75%] lg:h-fit max-h-[90%] h-fit overflow-y-scroll"
+                className="lg:max-w-[50%] lg:min-w-[50%] max-h-[75%] inset-auto relative lg:h-fit h-fit overflow-y-scroll"
                 dismiss={
                     {
                         enabled: false,
@@ -124,7 +124,7 @@ const PlayersList = () => {
                                                 {player.status === 0 && "Unavailable"}
                                             </span>
                                         </td>
-                                        <td className="w-full lg:w-auto p-3 text-gray-800  border border-b text-center block lg:table-cell relative lg:static">
+                                        <td className="w-full lg:w-auto p-3 text-gray-800  border border-b lg:text-center block lg:table-cell relative lg:static text-right">
                                             <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Actions</span>
                                             <div onClick={() => (0)}
                                                 className="inline-block"
@@ -133,7 +133,7 @@ const PlayersList = () => {
                                                 <UpdatePlayer playerAppId={index} />
                                             </div>
 
-                                            <p className="cursor-pointer text-blue-400 hover:text-blue-600 underline pl-6 inline-block"
+                                            <p className="cursor-pointer text-blue-400 hover:text-blue-600 underline pl-6 inline-block lg:top-0 relative top-2"
                                                 onClick={() => handleDelete(player.id)}
                                             >Remove</p>
                                         </td>
