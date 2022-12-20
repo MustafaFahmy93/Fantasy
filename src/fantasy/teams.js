@@ -206,9 +206,17 @@ const teamsEntropy = (teams, nTeam) => {
     for (let i = 0; i < nTeam; i++) {
         for (let j = 0; j < nTeam; j++) {
             if (j > i) {
-                entropy += Math.abs(teamEntropy(teams[i]) - teamEntropy(teams[j]));;
+                entropy += Math.abs(teamEntropy(teams[i]) - teamEntropy(teams[j]));
             }
         }
+    }
+    return entropy;
+}
+
+const totalTeamsEntropy = (teams, nTeam) => {
+    let entropy = 0;
+    for (let i = 0; i < nTeam; i++) {
+        entropy += teamEntropy(teams[i]);
     }
     return entropy;
 }
@@ -281,31 +289,32 @@ const teamTotal = (team, teamSize) => {
 //     return tOVR;
 // }
 const genRandomTeams = (players, nTeam, teamSize) => {
-    let minScore = 10000;
-    let myScore = 10000;
+    let minScore = 1000000;
+    let myScore = 1000000;
     let score = 0;
     let suggZeroTeams = [];
     // let lowerTeams;
-    let ll = 1000000;
+    let ll = 2000000;
     // let shufflePlayers = shuffle(players);
     for (let index = 0; index < ll; index++) {
         // shufflePlayers = shuffle(shufflePlayers.slice())
         let teams = teamBuilderRandom(players, nTeam, teamSize)
+
         score = teamsScore(teams, nTeam, teamSize);
         if (score <= minScore) {
+
             minScore = score;
             // lowerTeams = teams;
             let tOVR = teamsEntropy(teams, nTeam)
-            let testMyScore = (score * score) + (tOVR / 100)
+            let tte = totalTeamsEntropy(teams, nTeam)
+            let testMyScore = (score * score) + (tOVR / 100) + (tte / 10000)
             if (testMyScore <= myScore) {
                 myScore = testMyScore;
                 suggZeroTeams.push(sortTeams(teams, nTeam));
             }
         }
     }
-    // if (suggZeroTeams.length === 0) {
-    //     suggZeroTeams.push(lowerTeams);
-    // }
+
     return suggZeroTeams;
 }
 function compareEntropyTeams(a, b) {
@@ -326,7 +335,13 @@ export const teamBuilder = (players, nTeam, teamSize) => {
     // console.log(randomTeams.length);
     // console.log("teamsEntropy");
     // console.log(teamsEntropy(randomTeams[randomTeams.length - 1], nTeam, teamSize));
-    // console.log(teamsEntropy(randomTeams[0], nTeam, teamSize));
+    // // // console.log(teamsEntropy(randomTeams[0], nTeam, teamSize));
+    // console.log(teamsScore(randomTeams[randomTeams.length - 1], nTeam, teamSize));
+    // console.log("teams info");
+    // randomTeams[randomTeams.length - 1].map((team, index) => {
+    //     console.log(team);
+    //     console.log([teamTotal(team, teamSize), teamEntropy(team)])
+    // })
     return randomTeams[randomTeams.length - 1];
 
 };

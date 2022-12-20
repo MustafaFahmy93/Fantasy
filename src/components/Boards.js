@@ -19,7 +19,7 @@ import PlayersConfig from "../context/PlayersConfig";
 import LoadingSpinner from "./LoadingSpinner";
 // let teams = [[], [], [], [], []]
 const Boards = () => {
-    const { config } = useContext(AppConfig);
+    const { config, setIsLoading } = useContext(AppConfig);
     const { players } = useContext(PlayersConfig);
     const teamSize = config.teamSize;
     const nTeams = config.nTeams;
@@ -30,26 +30,33 @@ const Boards = () => {
     const [btnLeft, setBtnLeft] = useState(false);
     const [teams, setTeams] = useState([[], [], [], [], []]);
 
-    const [isLoading, setIsLoading] = useState(true);
+    // const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-
+        // setIsLoading(true)
         if (players.length > 0) {
-            setIsLoading(true)
-            if (config.mode === 1) {
-                setTeams(teamBuilderRandom(players, nTeams, teamSize))
-            }
-            else if (config.mode === 2) {
-                setTeams(teamBuilder(players, nTeams, teamSize))
-                setIsLoading(false)
+            setIsLoading(true);
+            setTeams([[], [], [], [], []]);
+            setTimeout(() => {
+                if (config.mode === 1) {
+                    setTeams(teamBuilderRandom(players, nTeams, teamSize))
+                    setIsLoading(false)
+                }
+                else if (config.mode === 2) {
+                    setTeams(teamBuilder(players, nTeams, teamSize))
+                    setIsLoading(false)
 
-            }
-            else if (config.mode === 3) {
-                setTeams(teamBuilderMinMax(players, nTeams, teamSize))
-            }
-            else if (config.mode === 4) {
-                setTeams(teamBuilderCaptainsRandom(players, config.captainsId, nTeams, teamSize))
-            }
+
+                }
+                else if (config.mode === 3) {
+                    setTeams(teamBuilderMinMax(players, nTeams, teamSize))
+                    setIsLoading(false)
+                }
+                else if (config.mode === 4) {
+                    setTeams(teamBuilderCaptainsRandom(players, config.captainsId, nTeams, teamSize))
+                    setIsLoading(false)
+                }
+            }, 500);
         }
 
     }, [config.mode, config.teamSize, config.nTeams, players]);
@@ -65,11 +72,16 @@ const Boards = () => {
         }
     }, teams); // to ran once
 
+    // useEffect(() => {
+    //     setIsLoading(true);
+    // }, config.nTeams); // to ran once
 
 
 
 
 
+    // console.log(teams);
+    // console.log(teamIndex);
     const teamA = teams[teamIndex];
 
     const teamPower = teamTotalPower(teamA, teamSize);
@@ -130,85 +142,88 @@ const Boards = () => {
     }
 
     return (
-        <div className="flex justify-center relative top-12 text-white">
-            {isLoading && <LoadingSpinner />}
+        <>
+            {config.isLoading && <LoadingSpinner />}
+            <div className="flex justify-center relative top-12 text-white">
 
-            <Card className="w-128 board-bg" >
-                <CardHeader className="relative h-8 text-center text-xl font-black" >
-                    {/* Team {teamIndex + 1} */}
-                    Team {getTeamName(teamA, config.captainsId)}
-                </CardHeader>
+                <Card className="w-128 board-bg" >
+                    <CardHeader className="relative h-8 text-center text-xl font-black" >
+                        {/* Team {teamIndex + 1} */}
+                        Team {getTeamName(teamA, config.captainsId)}
+                    </CardHeader>
 
-                <CardBody>
-                    {/* <div className="text-center board "> */}
-                    <div className="w-10 h-112 absolute z-20 left-0 rounded-full"
-                        onClick={() => {
-                            handleChangeTeam("left")
-                        }}
-                    >
-                        {btnLeft && <BsChevronCompactLeft size={40} className="h-full" />}
-                    </div>
-                    <div className="w-10 h-112 absolute z-20 right-0 rounded-full "
-                        onClick={() => {
-                            handleChangeTeam("right")
-                        }}
-                    >
-                        {btnRight && <BsChevronCompactRight size={40} className="h-full" />}
-                    </div>
-                    <div className="board">
-
-
-                        <motion.div
-                            initial="hidden"
-                            animate={"visible"}
-                            variants={list}
-                            key={Math.random()}
-                            className="text-center">
+                    <CardBody>
+                        {/* <div className="text-center board "> */}
+                        <div className="w-10 h-112 absolute z-20 left-0 rounded-full"
+                            onClick={() => {
+                                handleChangeTeam("left")
+                            }}
+                        >
+                            {btnLeft && <BsChevronCompactLeft size={40} className="h-full" />}
+                        </div>
+                        <div className="w-10 h-112 absolute z-20 right-0 rounded-full "
+                            onClick={() => {
+                                handleChangeTeam("right")
+                            }}
+                        >
+                            {btnRight && <BsChevronCompactRight size={40} className="h-full" />}
+                        </div>
+                        <div className="board">
 
 
-                            {
+                            <motion.div
+                                initial="hidden"
+                                animate={"visible"}
+                                variants={list}
+                                key={Math.random()}
+                                className="text-center">
 
 
-                                format.format[teamSize][teamFormat[teamSize][formatChange]].map((row, rowIndex) => (
-
-                                    <div
-                                        key={Math.random()}
-                                        className={teamStyle[teamSize]}>
-                                        {
-                                            row.map((player, index) => (
-
-                                                teamA.length > playerNaumber &&
-                                                <PlayerAvatar
-                                                    key={Math.random()}
-                                                    // key={config.buildTeams ? Math.random() : teamA[playerNaumber].id}
-                                                    name={teamA[playerNaumber].name}
-                                                    tColor={teamA[playerNaumber].tcolor}
-                                                    tPower={teamA[playerNaumber].total}
-                                                    playerId={teamA[playerNaumber].id}
-                                                >
-                                                    {playerNaumber++}
-                                                </PlayerAvatar>
+                                {
 
 
-                                            )
-                                            )
-                                        }
-                                    </div>
-                                ))
-                            }
-                        </motion.div>
-                    </div>
+                                    format.format[teamSize][teamFormat[teamSize][formatChange]].map((row, rowIndex) => (
 
-                </CardBody>
-                <CardFooter divider className="flex items-center justify-between py-3">
-                    <Typography variant="small">Team Overall: {teamPower}</Typography>
-                    <Typography variant="small" color="gray" className="flex gap-1 text-white">
-                        <i className="fas fa-map-marker-alt fa-sm mt-[3px] text-whait" />
-                        Barcelona, Spain
-                    </Typography>
-                </CardFooter>
-            </Card>
-        </div >
+                                        <div
+                                            key={Math.random()}
+                                            className={teamStyle[teamSize]}>
+                                            {
+                                                row.map((player, index) => (
+
+                                                    teamA.length > playerNaumber &&
+                                                    <PlayerAvatar
+                                                        key={Math.random()}
+                                                        // key={config.buildTeams ? Math.random() : teamA[playerNaumber].id}
+                                                        name={teamA[playerNaumber].name}
+                                                        tColor={teamA[playerNaumber].tcolor}
+                                                        tPower={teamA[playerNaumber].total}
+                                                        playerId={teamA[playerNaumber].id}
+                                                    >
+                                                        {playerNaumber++}
+                                                    </PlayerAvatar>
+
+
+                                                )
+                                                )
+                                            }
+                                        </div>
+                                    ))
+                                }
+                            </motion.div>
+                        </div>
+
+                    </CardBody>
+                    <CardFooter divider className="flex items-center justify-between py-3">
+                        <Typography variant="small">Team Overall: {teamPower}</Typography>
+                        <Typography variant="small" color="gray" className="flex gap-1 text-white">
+                            <i className="fas fa-map-marker-alt fa-sm mt-[3px] text-whait" />
+                            Barcelona, Spain
+                        </Typography>
+                    </CardFooter>
+                </Card>
+            </div >
+        </>
+
     );
 }
 

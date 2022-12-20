@@ -70,11 +70,29 @@
   border-top: 10px solid #383636; /* Blue */
   border-radius: 50%;
   animation: spinner 1.5s linear infinite;
+  position: fixed;
+  z-index: 999;
+  overflow: show;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
 }
 
 .spinner-container {
-  display: grid;
+        height: 132vh;
+    width: 250vh;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    background-color: rgb(25,62,68,0.5);
+
+  /* display: grid;
   justify-content: center;
   align-items: center;
-  height: 350px;
+  height: 350px; */
 }
