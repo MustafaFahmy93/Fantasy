@@ -9,7 +9,7 @@ export function AppProvide({ children }) {
         teamSize: "5",
         nTeams: "3",
         mode: 2, // balance
-        buildTeams: true,
+        buildTeams: false,
         captainsId: []
 
     }

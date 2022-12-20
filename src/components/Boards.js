@@ -8,53 +8,69 @@ import {
 } from "@material-tailwind/react";
 
 import { BsChevronCompactLeft, BsChevronCompactRight } from "react-icons/bs";
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import PlayerAvatar from "./PlayerAvatar";
 import format from "../data/fantacy.json";
 // import players from "../data/players.json";
 import AppConfig from "../context/AppConfig";
 import { motion } from "framer-motion";
-import { teamBuilder, teamBuilderRandom, teamBuilderCaptainsRandom, teamTotalPower, getTeamName } from '../fantasy/teams'
+import { teamBuilder, teamBuilderRandom, teamBuilderMinMax, teamBuilderCaptainsRandom, teamTotalPower, getTeamName } from '../fantasy/teams'
 import PlayersConfig from "../context/PlayersConfig";
-let teams = [[], [], [], [], []]
+import LoadingSpinner from "./LoadingSpinner";
+// let teams = [[], [], [], [], []]
 const Boards = () => {
-    const { config, setBuildTeams } = useContext(AppConfig);
+    const { config } = useContext(AppConfig);
     const { players } = useContext(PlayersConfig);
     const teamSize = config.teamSize;
     const nTeams = config.nTeams;
-    // const TeamFormats = ["1", "2", "1"];
-    // console.log(["buildTeams", config.buildTeams])
-
-    if (config.buildTeams && players.length > 0) {
-        if (config.mode === 1) {
-            teams = teamBuilderRandom(players, nTeams, teamSize);
-            setBuildTeams(false);
-        }
-        else if (config.mode === 2) {
-            teams = teamBuilder(players, nTeams, teamSize);
-            setBuildTeams(false);
-        }
-        else if (config.mode === 3) {
-            teams = teamBuilderCaptainsRandom(players, config.captainsId, nTeams, teamSize)
-            // console.log(["teams", teams])
-            setBuildTeams(false);
-            // const teams = teamBuilderRandom(3, 5);
-        }
-    }
-
-
-
-
-    // console.log("teams");
-    // console.log(teams);
-
+    // 
     const [formatChange, setFormat] = useState(0)
     const [teamIndex, setTeamIndex] = useState(0)
     const [btnRight, setBtnRight] = useState(true);
     const [btnLeft, setBtnLeft] = useState(false);
+    const [teams, setTeams] = useState([[], [], [], [], []]);
+
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+
+        if (players.length > 0) {
+            setIsLoading(true)
+            if (config.mode === 1) {
+                setTeams(teamBuilderRandom(players, nTeams, teamSize))
+            }
+            else if (config.mode === 2) {
+                setTeams(teamBuilder(players, nTeams, teamSize))
+                setIsLoading(false)
+
+            }
+            else if (config.mode === 3) {
+                setTeams(teamBuilderMinMax(players, nTeams, teamSize))
+            }
+            else if (config.mode === 4) {
+                setTeams(teamBuilderCaptainsRandom(players, config.captainsId, nTeams, teamSize))
+            }
+        }
+
+    }, [config.mode, config.teamSize, config.nTeams, players]);
+
+
+    useEffect(() => {
+        // console.log("team Change")
+        if (config.nTeams < teamIndex) {
+            setTeamIndex(config.nTeams)
+        } else {
+
+            setTeamIndex(teamIndex)
+        }
+    }, teams); // to ran once
+
+
+
+
+
+
     const teamA = teams[teamIndex];
-    // console.log("teamA");
-    // console.log(teamA);
 
     const teamPower = teamTotalPower(teamA, teamSize);
     let playerNaumber = 0;
@@ -91,6 +107,7 @@ const Boards = () => {
 
             }
         }
+        // setCurrentTeam(teams[teamIndex]);
     }
 
     const teamFormat = {
@@ -114,7 +131,7 @@ const Boards = () => {
 
     return (
         <div className="flex justify-center relative top-12 text-white">
-
+            {isLoading && <LoadingSpinner />}
 
             <Card className="w-128 board-bg" >
                 <CardHeader className="relative h-8 text-center text-xl font-black" >

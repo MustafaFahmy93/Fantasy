@@ -30,7 +30,7 @@ const Captains = () => {
         const uniq = [...new Set(captains)];
 
         if (uniq.length === parseInt(config.nTeams)) {
-            setMode(3);
+            setMode(4);
             setCaptains(captains);
             handleOpen();
         } else {
@@ -50,6 +50,7 @@ const Captains = () => {
                 <Select label="Mode" className="text-white" value={"Balance"}>
                     <Option onClick={() => setMode(1)}>Random</Option>
                     <Option value={"Balance"} onClick={() => setMode(2)}>Balance</Option>
+                    <Option onClick={() => setMode(3)}>Min-Max Distribution</Option>
                     <Option onClick={() => {
                         handleOpen();
 

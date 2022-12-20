@@ -9,12 +9,14 @@ import PlayersConfig from "../context/PlayersConfig";
 import axios from "axios";
 import Captains from "./Captains";
 const Fantasy = () => {
-    const { config, setTeamSize, setNTeams } = useContext(AppConfig);
-    const { LoadPlayers } = useContext(PlayersConfig);
+    const { config, setTeamSize, setNTeams, setBuildTeams } = useContext(AppConfig);
+    const { players, LoadPlayers } = useContext(PlayersConfig);
+    let res;
     const fetchAllPlayers = async () => {
         try {
-            const res = await axios.get("https://x-tend.solutions/fantasy/api/");
+            res = await axios.get("https://x-tend.solutions/fantasy/api/");
             LoadPlayers(res.data);
+            // setBuildTeams(true)
             // console.log("res.data");
             // console.log(res.data);
         } catch (err) {
@@ -23,12 +25,13 @@ const Fantasy = () => {
         }
     };
     useEffect(() => {
-
         fetchAllPlayers();
     }, []); // to ran once
+
     // fetchAllPlayers();
     return (
         <div>
+
             <div className="bg-img"></div>
             {/* { */}
             {/*  config.isLogin && */}

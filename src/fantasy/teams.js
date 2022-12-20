@@ -33,7 +33,7 @@ export const playersFilter = (players) => {
     })
     return playersFilterd;
 }
-export const teamBuilder = (players, nTeam, teamSize) => {
+export const teamBuilderMinMax = (players, nTeam, teamSize) => {
     nTeam = parseInt(nTeam);
     teamSize = parseInt(teamSize);
     let playersFilterd = playersFilter(players);
@@ -77,6 +77,7 @@ export const teamTotalPower = (team, teamSize) => {
     });
     return parseInt(totalPower / teamSize);
 }
+
 
 // ==================
 const randomPickObject = function (obj) {
@@ -155,7 +156,180 @@ export const teamBuilderCaptainsRandom = (players, captainsId, nTeam, teamSize) 
     return teams;
 }
 
+// ==========================================
+// function shuffle(array) {
+const shuffle = (array) => {
+    let shuffleArray = array.slice();
+    for (let i = shuffleArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffleArray[i], shuffleArray[j]] = [shuffleArray[j], shuffleArray[i]];
+    }
+    return shuffleArray
+}
+// def teamsScore(teamA, teamB, teamC):
+// a = sum(teamA)
+// b = sum(teamB)
+// c = sum(teamC)
+// score = abs(a - b) + abs(a - c) + abs(b - c)
+// return score
+const teamsScore = (teams, nTeam, teamSize) => {
+    let score = 0;
+    for (let i = 0; i < nTeam; i++) {
+        for (let j = 0; j < nTeam; j++) {
+            if (j > i) {
+                score += Math.abs(teamTotal(teams[i], teamSize) - teamTotal(teams[j], teamSize));
+            }
+        }
+    }
+    return score;
+}
 
+const teamEntropy = (team) => {
+    let entropy = 0;
+    // if (team.length > 1) {
+    for (let i = 0; i < team.length; i++) {
+        for (let j = 0; j < team.length; j++) {
+            if (j > i) {
+                entropy += Math.abs(team[i].total - team[j].total);
+            }
+        }
+    }
+    // }
+    return entropy;
+}
+// def teamsOVR(a, b, c):
+//     # score = abs(a - b) + abs(a - c) + abs(b - c)
+// score = max(a, b, c) - min(a, b, c)
+// return score
+const teamsEntropy = (teams, nTeam) => {
+    let entropy = 0;
+    for (let i = 0; i < nTeam; i++) {
+        for (let j = 0; j < nTeam; j++) {
+            if (j > i) {
+                entropy += Math.abs(teamEntropy(teams[i]) - teamEntropy(teams[j]));;
+            }
+        }
+    }
+    return entropy;
+}
+
+
+
+
+function comparePlayers(a, b) {
+    if (a.total < b.total) {
+        return -1;
+    }
+    if (a.total > b.total) {
+        return 1;
+    }
+    return 0;
+}
+function compareTeams(a, b) {
+    let l = a.length;
+    if (a.length > 0 && b.length > 0) {
+        if (a[l - 1].total < b[l - 1].total) {
+            return -1;
+        }
+        if (a[l - 1].total > b[l - 1].total) {
+            return 1;
+        }
+    }
+    return 0;
+}
+const sortTeams = (teams, nTeam) => {
+    let newTeams = teams.slice();
+    for (let index = 0; index < nTeam; index++) {
+        newTeams[index] = newTeams[index].sort(comparePlayers);
+    }
+    // console.log("newTeams");
+    // console.log(newTeams);
+    newTeams.sort(compareTeams);
+    return newTeams;
+
+}
+const teamTotal = (team, teamSize) => {
+    // const teamSize = team.length;
+    let totalPower = 0;
+    // console.log("team");
+    // console.log(team);
+    team.map((player, index) => {
+        totalPower += player.total;
+    });
+    return totalPower;
+}
+// def teamScore(team):
+// score = 0
+// for i in range(len(team)):
+//     for j in range(len(team)):
+//         if j > i:
+//             score += abs(team[i] - team[j])
+// return score
+
+// def teamsOVR(a, b, c):
+// score = abs(a - b) + abs(a - c) + abs(b - c)
+// return score
+// const teamsOVR = (teams, nTeam, teamSize) => {
+//     let tOVR = 0;
+//     for (let i = 0; i < nTeam; i++) {
+//         for (let j = 0; j < nTeam; j++) {
+//             if (j > i) {
+//                 tOVR += Math.abs(teamEntropy(teams[i], teamSize) - teamEntropy(teams[j], teamSize));;
+//             }
+//         }
+//     }
+//     return tOVR;
+// }
+const genRandomTeams = (players, nTeam, teamSize) => {
+    let minScore = 10000;
+    let myScore = 10000;
+    let score = 0;
+    let suggZeroTeams = [];
+    // let lowerTeams;
+    let ll = 1000000;
+    // let shufflePlayers = shuffle(players);
+    for (let index = 0; index < ll; index++) {
+        // shufflePlayers = shuffle(shufflePlayers.slice())
+        let teams = teamBuilderRandom(players, nTeam, teamSize)
+        score = teamsScore(teams, nTeam, teamSize);
+        if (score <= minScore) {
+            minScore = score;
+            // lowerTeams = teams;
+            let tOVR = teamsEntropy(teams, nTeam)
+            let testMyScore = (score * score) + (tOVR / 100)
+            if (testMyScore <= myScore) {
+                myScore = testMyScore;
+                suggZeroTeams.push(sortTeams(teams, nTeam));
+            }
+        }
+    }
+    // if (suggZeroTeams.length === 0) {
+    //     suggZeroTeams.push(lowerTeams);
+    // }
+    return suggZeroTeams;
+}
+function compareEntropyTeams(a, b) {
+    let nTeam = a.length;
+    let teamSize = a[0].length;
+    if (teamsEntropy(a, nTeam, teamSize) < teamsEntropy(b, nTeam, teamSize)) {
+        return -1;
+    }
+    if (teamsEntropy(a, nTeam, teamSize) > teamsEntropy(b, nTeam, teamSize)) {
+        return 1;
+    }
+    return 0;
+}
+export const teamBuilder = (players, nTeam, teamSize) => {
+    let randomTeams = genRandomTeams(players, nTeam, teamSize);
+    // randomTeams.sort(compareEntropyTeams);
+    // console.log("randomTeams");
+    // console.log(randomTeams.length);
+    // console.log("teamsEntropy");
+    // console.log(teamsEntropy(randomTeams[randomTeams.length - 1], nTeam, teamSize));
+    // console.log(teamsEntropy(randomTeams[0], nTeam, teamSize));
+    return randomTeams[randomTeams.length - 1];
+
+};
 
 // ====================================
 export const getTeamName = (team, captainsId) => {
