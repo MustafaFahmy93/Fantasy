@@ -14,7 +14,7 @@ import UpdatePlayer from "./UpdatePlayer";
 import AppConfig from "../context/AppConfig";
 const PlayersList = () => {
     const { players, LoadPlayers } = useContext(PlayersConfig);
-    const { setBuildTeams } = useContext(AppConfig);
+    const { setMode } = useContext(AppConfig);
 
     const [open, setOpen] = useState(false);
     // const [players, setPlayers] = useState([]);
@@ -24,6 +24,7 @@ const PlayersList = () => {
     };
     const fetchAllPlayers = async () => {
         try {
+
             const res = await axios.get("https://x-tend.solutions/fantasy/api/");
             LoadPlayers(res.data);
 
@@ -35,13 +36,14 @@ const PlayersList = () => {
     const handleDelete = async (id) => {
         if (window.confirm('Are you sure?')) {
             try {
+
                 // await axios.delete(`https://x-tend.solutions/fantasy/api/${id}`);
                 await axios.delete("https://x-tend.solutions/fantasy/api/", { data: { id: id }, headers: { "Authorization": "***" } });
 
                 // window.location.reload()
                 await fetchAllPlayers();
                 alert("Done");
-                setBuildTeams(true);
+                // setBuildTeams(true);
 
 
             } catch (err) {
@@ -61,7 +63,8 @@ const PlayersList = () => {
                 className="p-1 font-normal"
                 onClick={() => {
 
-                    fetchAllPlayers()
+                    // fetchAllPlayers()
+                    setMode(1)
                     handleOpen()
                 }
 
@@ -152,12 +155,20 @@ const PlayersList = () => {
                     <Button
                         variant="text"
                         color="red"
-                        onClick={handleOpen}
+                        onClick={() => {
+
+                            setMode(2)
+                            handleOpen()
+                        }}
                         className="mr-1"
                     >
                         <span>Cancel</span>
                     </Button>
-                    <Button variant="gradient" color="green" onClick={handleOpen}>
+                    <Button variant="gradient" color="green" onClick={() => {
+
+                        setMode(2)
+                        handleOpen()
+                    }}>
                         <span>Confirm</span>
                     </Button>
                 </DialogFooter>

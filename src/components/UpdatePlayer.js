@@ -17,7 +17,7 @@ import AppConfig from "../context/AppConfig";
 const UpdatePlayer = ({ playerAppId }) => {
     // const { players, setPlayers, player, setPlayer, setName, setPace, setShooting, setPassing, setDribbling, setDefending, setPhysicality } = useContext(PlayersConfig);
     const { players, player, resetPlayer, LoadPlayers, LoadPlayer, setName, setStatus, setTcolor, setPace, setShooting, setPassing, setDribbling, setDefending, setPhysicality } = useContext(PlayersConfig);
-    const { config, setNTeams, setBuildTeams } = useContext(AppConfig);
+    const { config, setNTeams } = useContext(AppConfig);
     const [open, setOpen] = useState(false);
 
     const handleOpen = () => {
@@ -56,7 +56,6 @@ const UpdatePlayer = ({ playerAppId }) => {
             // navigate("/");
             await fetchAllPlayers();
             // setNTeams(config.nTeams);
-            setBuildTeams(true);
             // handleOpen();
         } catch (err) {
             console.log(err);

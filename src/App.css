@@ -71,7 +71,7 @@
   border-radius: 50%;
   animation: spinner 1.5s linear infinite;
   position: fixed;
-  z-index: 999;
+  z-index: 999999;
   overflow: show;
   margin: auto;
   top: 0;
@@ -88,7 +88,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 9999;
+    z-index: 999999;
     background-color: rgb(25,62,68,0.5);
 
   /* display: grid;

@@ -15,13 +15,14 @@ import PlayersConfig from "../context/PlayersConfig";
 import AppConfig from "../context/AppConfig";
 const AddPlayer = ({ btnStyle }) => {
     const { player, LoadPlayers, resetPlayer, setName, setStatus, setTcolor, setPace, setShooting, setPassing, setDribbling, setDefending, setPhysicality } = useContext(PlayersConfig);
-    const { setBuildTeams } = useContext(AppConfig);
+    const { setMode } = useContext(AppConfig);
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => {
         resetPlayer()
         setOpen(!open)
     };
+
     const setPlayername = (e) => {
         const { value } = e.target;
         // console.log(value);
@@ -46,7 +47,6 @@ const AddPlayer = ({ btnStyle }) => {
             alert(player.name + " has been added to the players list");
             resetPlayer();
             await fetchAllPlayers();
-            setBuildTeams(true);
         } catch (err) {
             console.log(err);
             // alert("Something went wrong");
@@ -55,7 +55,11 @@ const AddPlayer = ({ btnStyle }) => {
     };
     return (
         <Fragment>
-            <Button onClick={handleOpen} variant="gradient" className={btnStyle} color="indigo">
+            <Button onClick={() => {
+                setMode(1)
+                handleOpen()
+            }
+            } variant="gradient" className={btnStyle} color="indigo">
                 Add Player
             </Button>
             <Dialog open={open} handler={handleOpen} size="xl"
@@ -118,7 +122,10 @@ const AddPlayer = ({ btnStyle }) => {
                     <Button
                         variant="text"
                         color="red"
-                        onClick={handleOpen}
+                        onClick={() => {
+                            setMode(2)
+                            handleOpen()
+                        }}
                         className="mr-1"
                     >
                         <span>Cancel</span>
