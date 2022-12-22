@@ -14,7 +14,7 @@ import UpdatePlayer from "./UpdatePlayer";
 import AppConfig from "../context/AppConfig";
 const PlayersList = () => {
     const { players, LoadPlayers } = useContext(PlayersConfig);
-    const { setMode } = useContext(AppConfig);
+    const { setMode, setHideBoard } = useContext(AppConfig);
 
     const [open, setOpen] = useState(false);
     // const [players, setPlayers] = useState([]);
@@ -43,7 +43,6 @@ const PlayersList = () => {
                 // window.location.reload()
                 await fetchAllPlayers();
                 alert("Done");
-                // setBuildTeams(true);
 
 
             } catch (err) {
@@ -64,6 +63,7 @@ const PlayersList = () => {
                 onClick={() => {
 
                     // fetchAllPlayers()
+                    setHideBoard(true)
                     setMode(1)
                     handleOpen()
                 }
@@ -156,8 +156,9 @@ const PlayersList = () => {
                         variant="text"
                         color="red"
                         onClick={() => {
-
+                            setHideBoard(false)
                             setMode(2)
+
                             handleOpen()
                         }}
                         className="mr-1"
@@ -165,7 +166,7 @@ const PlayersList = () => {
                         <span>Cancel</span>
                     </Button>
                     <Button variant="gradient" color="green" onClick={() => {
-
+                        setHideBoard(false)
                         setMode(2)
                         handleOpen()
                     }}>

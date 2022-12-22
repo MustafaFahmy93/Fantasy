@@ -168,49 +168,53 @@ const Boards = () => {
                         >
                             {btnRight && <BsChevronCompactRight size={40} className="h-full" />}
                         </div>
-                        <div className="board">
+                        {
+
+                            !config.hideBoard && <div className="board">
 
 
-                            <motion.div
-                                initial="hidden"
-                                animate={"visible"}
-                                variants={list}
-                                key={Math.random()}
-                                className="text-center">
+                                <motion.div
+                                    initial="hidden"
+                                    animate={"visible"}
+                                    variants={list}
+                                    key={Math.random()}
+                                    className="text-center">
 
 
-                                {
+                                    {
 
 
-                                    format.format[teamSize][teamFormat[teamSize][formatChange]].map((row, rowIndex) => (
+                                        format.format[teamSize][teamFormat[teamSize][formatChange]].map((row, rowIndex) => (
 
-                                        <div
-                                            key={Math.random()}
-                                            className={teamStyle[teamSize]}>
-                                            {
-                                                row.map((player, index) => (
+                                            <div
+                                                key={Math.random()}
+                                                className={teamStyle[teamSize]}>
+                                                {
+                                                    row.map((player, index) => (
 
-                                                    teamA.length > playerNaumber &&
-                                                    <PlayerAvatar
-                                                        key={Math.random()}
-                                                        // key={config.buildTeams ? Math.random() : teamA[playerNaumber].id}
-                                                        name={teamA[playerNaumber].name}
-                                                        tColor={teamA[playerNaumber].tcolor}
-                                                        tPower={teamA[playerNaumber].total}
-                                                        playerId={teamA[playerNaumber].id}
-                                                    >
-                                                        {playerNaumber++}
-                                                    </PlayerAvatar>
+                                                        teamA.length > playerNaumber &&
+                                                        <PlayerAvatar
+                                                            key={Math.random()}
+                                                            // key={config.buildTeams ? Math.random() : teamA[playerNaumber].id}
+                                                            name={teamA[playerNaumber].name}
+                                                            tColor={teamA[playerNaumber].tcolor}
+                                                            tPower={teamA[playerNaumber].total}
+                                                            playerId={teamA[playerNaumber].id}
+                                                        >
+                                                            {playerNaumber++}
+                                                        </PlayerAvatar>
 
 
-                                                )
-                                                )
-                                            }
-                                        </div>
-                                    ))
-                                }
-                            </motion.div>
-                        </div>
+                                                    )
+                                                    )
+                                                }
+                                            </div>
+                                        ))
+                                    }
+                                </motion.div>
+                            </div>
+                        }
+
 
                     </CardBody>
                     <CardFooter divider className="flex items-center justify-between py-3">

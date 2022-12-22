@@ -9,8 +9,8 @@ import PlayersConfig from "../context/PlayersConfig";
 import axios from "axios";
 import Captains from "./Captains";
 const Fantasy = () => {
-    const { config, setTeamSize, setNTeams, setBuildTeams } = useContext(AppConfig);
-    const { players, LoadPlayers } = useContext(PlayersConfig);
+    const { config, setTeamSize, setNTeams } = useContext(AppConfig);
+    const { LoadPlayers } = useContext(PlayersConfig);
     let res;
     const fetchAllPlayers = async () => {
         try {

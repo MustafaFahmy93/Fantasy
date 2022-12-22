@@ -15,7 +15,7 @@ import PlayersConfig from "../context/PlayersConfig";
 import AppConfig from "../context/AppConfig";
 const AddPlayer = ({ btnStyle }) => {
     const { player, LoadPlayers, resetPlayer, setName, setStatus, setTcolor, setPace, setShooting, setPassing, setDribbling, setDefending, setPhysicality } = useContext(PlayersConfig);
-    const { setMode } = useContext(AppConfig);
+    const { setMode, setHideBoard } = useContext(AppConfig);
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => {
@@ -56,6 +56,7 @@ const AddPlayer = ({ btnStyle }) => {
     return (
         <Fragment>
             <Button onClick={() => {
+                setHideBoard(true)
                 setMode(1)
                 handleOpen()
             }
@@ -123,6 +124,7 @@ const AddPlayer = ({ btnStyle }) => {
                         variant="text"
                         color="red"
                         onClick={() => {
+                            setHideBoard(false)
                             setMode(2)
                             handleOpen()
                         }}

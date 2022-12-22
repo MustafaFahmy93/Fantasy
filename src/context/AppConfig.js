@@ -10,8 +10,8 @@ export function AppProvide({ children }) {
         teamSize: "5",
         nTeams: "3",
         mode: 2, // balance
-        buildTeams: false,
-        captainsId: []
+        captainsId: [],
+        hideBoard: false,
 
     }
     // App Config
@@ -32,30 +32,23 @@ export function AppProvide({ children }) {
 
     };
     const setTeamSize = (sizw) => {
-        // setIsLoading(true)
         setConfig((prevState) => {
             return { ...prevState, teamSize: sizw }
         });
-        // setBuildTeams(true);
     };
     const setNTeams = (num) => {
-        // setIsLoading(true)
         setConfig((prevState) => {
             return { ...prevState, nTeams: num }
         });
-        // if (config.mode !== 3) {
-        //     setBuildTeams(true);
-        // }
     };
     const setMode = (mode) => {
         setConfig((prevState) => {
             return { ...prevState, mode: mode }
         });
-        // setBuildTeams(true);
     };
-    const setBuildTeams = (value) => {
+    const setHideBoard = (value) => {
         setConfig((prevState) => {
-            return { ...prevState, buildTeams: value }
+            return { ...prevState, hideBoard: value }
         });
     };
     const setCaptains = (captains) => {
@@ -67,7 +60,7 @@ export function AppProvide({ children }) {
 
 
     const methods = {
-        config, resetConfig, setLogin, setIsLoading, setTeamSize, setNTeams, setMode, setBuildTeams,
+        config, resetConfig, setLogin, setIsLoading, setTeamSize, setNTeams, setMode, setHideBoard,
         setCaptains
 
     }
