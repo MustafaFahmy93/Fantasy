@@ -8,12 +8,14 @@ import {
     Typography
 } from "@material-tailwind/react";
 // import { players } from "../data/players.js"
-import PlayersConfig from "../context/PlayersConfig";
 import axios from "axios";
 import UpdatePlayer from "./UpdatePlayer";
 import AppConfig from "../context/AppConfig";
+import { playersStore } from "../context/PlayersContext";
+
 const PlayersList = () => {
-    const { players, LoadPlayers } = useContext(PlayersConfig);
+    // const { players, LoadPlayers } = useContext(PlayersConfig);
+    const players = playersStore(state => state.playersData)
     const { setMode, setHideBoard } = useContext(AppConfig);
 
     const [open, setOpen] = useState(false);
@@ -22,17 +24,7 @@ const PlayersList = () => {
         // alert("done")
         setOpen(!open)
     };
-    const fetchAllPlayers = async () => {
-        try {
 
-            const res = await axios.get("https://x-tend.solutions/fantasy/api/");
-            LoadPlayers(res.data);
-
-        } catch (err) {
-            // alert("Something went wrong get");
-            console.log(err);
-        }
-    };
     const handleDelete = async (id) => {
         if (window.confirm('Are you sure?')) {
             try {
@@ -41,7 +33,7 @@ const PlayersList = () => {
                 await axios.delete("https://x-tend.solutions/fantasy/api/", { data: { id: id }, headers: { "Authorization": "***" } });
 
                 // window.location.reload()
-                await fetchAllPlayers();
+                // await fetchAllPlayers();
                 alert("Done");
 
 
@@ -123,8 +115,8 @@ const PlayersList = () => {
                                             <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Status</span>
                                             <span className={player.status ? "rounded bg-green-400 py-1 px-3 text-xs font-bold" : "rounded bg-red-400 py-1 px-3 text-xs font-bold"}>
                                                 {/* {player.status === 1 ? "Available" : "Unavailable"} */}
-                                                {player.status === 1 && "Available"}
-                                                {player.status === 0 && "Unavailable"}
+                                                {player.status && "Available"}
+                                                {player.status === false && "Unavailable"}
                                             </span>
                                         </td>
                                         <td className="w-full lg:w-auto p-3 text-gray-800  border border-b lg:text-center block lg:table-cell relative lg:static text-right">

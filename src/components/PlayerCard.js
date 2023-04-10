@@ -1,9 +1,11 @@
-import React, { useContext } from 'react'
-import { getPlayerInfo } from '../fantasy/teams'
-import PlayersConfig from "../context/PlayersConfig";
-const PlayerCard = ({ playerId }) => {
-    const { players } = useContext(PlayersConfig);
-    const player = getPlayerInfo(players, playerId)
+import React, { } from 'react'
+// import { playersStore } from '../context/PlayersContext'
+// import { getPlayerInfo } from '../fantasy/teams'
+
+const PlayerCard = ({ player }) => {
+    // const { players } = useContext(PlayersConfig);
+    // const players = playersStore(state => state.playersData)
+    // const player = getPlayerInfo(players, playerId)
     // console.log(["player", playerId, player])
     let attNameStyle = "inline-block w-4/12 pt-1 text-xs";
     let attRangeStyle = "w-6/12";

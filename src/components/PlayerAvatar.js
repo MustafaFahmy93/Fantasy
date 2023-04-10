@@ -13,7 +13,7 @@ import avaterBlue from "../assets/img/blue.png"
 import avaterBW from "../assets/img/black-white.png"
 import { motion } from "framer-motion"
 import PlayerCard from './PlayerCard';
-const PlayerAvatar = ({ name, tPower, tColor, playerId }) => {
+const PlayerAvatar = ({ name, tPower, tColor, player }) => {
     const item = {
         visible: {
             opacity: 1, y: 0,
@@ -57,7 +57,7 @@ const PlayerAvatar = ({ name, tPower, tColor, playerId }) => {
                     </div>
                 </PopoverHandler>
                 <PopoverContent>
-                    <PlayerCard playerId={playerId} />
+                    <PlayerCard player={player} />
                 </PopoverContent>
             </Popover>
 

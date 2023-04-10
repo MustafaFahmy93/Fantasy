@@ -15,12 +15,14 @@ import format from "../data/fantacy.json";
 import AppConfig from "../context/AppConfig";
 import { motion } from "framer-motion";
 import { teamBuilder, teamBuilderRandom, teamBuilderMinMax, teamBuilderCaptainsRandom, teamTotalPower, getTeamName } from '../fantasy/teams'
-import PlayersConfig from "../context/PlayersConfig";
+
 import LoadingSpinner from "./LoadingSpinner";
+import { playersStore } from "../context/PlayersContext";
 // let teams = [[], [], [], [], []]
+
 const Boards = () => {
     const { config, setIsLoading } = useContext(AppConfig);
-    const { players } = useContext(PlayersConfig);
+    const players = playersStore(state => state.playersData)
     const teamSize = config.teamSize;
     const nTeams = config.nTeams;
     // 
@@ -34,6 +36,7 @@ const Boards = () => {
 
     useEffect(() => {
         // setIsLoading(true)
+        console.log(players)
         if (players.length > 0) {
             setIsLoading(true);
             setTeams([[], [], [], [], []]);
@@ -199,7 +202,7 @@ const Boards = () => {
                                                             name={teamA[playerNaumber].name}
                                                             tColor={teamA[playerNaumber].tcolor}
                                                             tPower={teamA[playerNaumber].total}
-                                                            playerId={teamA[playerNaumber].id}
+                                                            player={teamA[playerNaumber]}
                                                         >
                                                             {playerNaumber++}
                                                         </PlayerAvatar>

@@ -115,13 +115,7 @@ const UpdatePlayer = ({ playerAppId }) => {
 
 
 
-                        <InputRange inputName={"Pace"} playerPower={player.pace} disabled={false} method={setPace} />
-                        <InputRange inputName={"Shooting"} playerPower={player.shooting} disabled={false} method={setShooting} />
-                        <InputRange inputName={"Passing"} playerPower={player.passing} disabled={false} method={setPassing} />
-                        <InputRange inputName={"Dribbling"} playerPower={player.dribbling} disabled={false} method={setDribbling} />
-                        <InputRange inputName={"Defending"} playerPower={player.defending} disabled={false} method={setDefending} />
-                        <InputRange inputName={"Physicality"} playerPower={player.physicality} disabled={false} method={setPhysicality} />
-                        <InputRange inputName={"OVERALL"} playerPower={player.total} disabled={true} method={() => { }} />
+
 
                     </div>
                 </DialogBody>

@@ -32,7 +32,7 @@ export function PlayersProvide({ children }) {
     const LoadPlayer = (newPlayer) => {
         // console.
         const clonePlayer = structuredClone(newPlayer);
-        clonePlayer.status = binToBool(clonePlayer.status)
+        // clonePlayer.status = binToBool(clonePlayer.status)
         setPlayer(clonePlayer);
     };
     const LoadPlayers = (newPlayers) => {

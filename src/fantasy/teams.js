@@ -27,7 +27,7 @@ const getMaxPower = (arr) => {
 export const playersFilter = (players) => {
     let playersFilterd = [];
     players.map((player, index) => {
-        if (player.status === 1) {
+        if (player.status) {
             playersFilterd.push(player);
         }
     })
@@ -235,7 +235,8 @@ function comparePlayers(a, b) {
 }
 function compareTeams(a, b) {
     let l = a.length;
-    if (a.length > 0 && b.length > 0) {
+    // console.log(a, b)
+    if (a.length > 0 && b.length > 0 && a.length === b.length) {
         if (a[l - 1].total < b[l - 1].total) {
             return -1;
         }
