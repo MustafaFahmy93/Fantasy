@@ -295,7 +295,7 @@ const genRandomTeams = (players, nTeam, teamSize) => {
     let score = 0;
     let suggZeroTeams = [];
     // let lowerTeams;
-    let ll = 2000000;
+    let ll = 500000; //2M
     // let shufflePlayers = shuffle(players);
     for (let index = 0; index < ll; index++) {
         // shufflePlayers = shuffle(shufflePlayers.slice())

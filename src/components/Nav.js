@@ -29,6 +29,7 @@ const Nav = () => {
       <PlayersList />
       <PopoverInfo btnName={"Settings"} info={"Comming Soon."} />
       <PopoverInfo btnName={"How to play"} info={"Figure out by yourself"} />
+      <a href="https://x-tend.solutions/fantasy/voting" target="_blank" className="">Vote now</a>
     </ul>
   );
 

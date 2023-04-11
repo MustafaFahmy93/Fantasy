@@ -1,20 +1,25 @@
 
 import { PlayersProvide } from './context/PlayersConfig';
 import './App.css';
-import Login from './components/Login';
 import { useEffect, useState } from "react";
 import { AppProvide } from './context/AppConfig';
 import Fantasy from './components/Fantasy';
 import { playersStore } from './context/PlayersContext';
+import Notifications from './components/Notifications';
+import { muiStore } from './context/muiContext';
+
 
 
 function App() {
   const updatePlayersData = playersStore(state => state.updatePlayersData)
+  const notify = muiStore(state => state.notify)
+  const setNotify = muiStore(state => state.setNotify)
   useEffect(() => {
     updatePlayersData()
   }, [])
   return (
     <div className="App">
+      <Notifications state={notify} setState={setNotify} />
       <AppProvide >
         <PlayersProvide ><Fantasy /></PlayersProvide>
 

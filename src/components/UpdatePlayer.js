@@ -1,131 +1,137 @@
-import { Fragment, useState, useContext } from "react";
+import { Fragment, useState, useEffect } from "react";
+// import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import {
-    Input,
     Button,
-    Dialog,
-    DialogHeader,
-    DialogBody,
-    DialogFooter,
+    Input,
     Switch,
     Option,
     Select
 } from "@material-tailwind/react";
-import axios from "axios";
-import InputRange from "./InputRange";
-import PlayersConfig from "../context/PlayersConfig";
-import AppConfig from "../context/AppConfig";
-const UpdatePlayer = ({ playerAppId }) => {
-    // const { players, setPlayers, player, setPlayer, setName, setPace, setShooting, setPassing, setDribbling, setDefending, setPhysicality } = useContext(PlayersConfig);
-    const { players, player, resetPlayer, LoadPlayers, LoadPlayer, setName, setStatus, setTcolor, setPace, setShooting, setPassing, setDribbling, setDefending, setPhysicality } = useContext(PlayersConfig);
-    const { config, setNTeams } = useContext(AppConfig);
-    const [open, setOpen] = useState(false);
 
-    const handleOpen = () => {
-        // console.log(["Player", playerAppId])
-        // console.log(players)
-        // console.log(players[playerAppId])
-        // setPlayer(players[playerAppId])
-        LoadPlayer(players[playerAppId])
-        setOpen(!open)
+import { updatePlayerDB } from "../db/db";
+import { playersStore } from "../context/PlayersContext";
+import { muiStore } from "../context/muiContext";
+
+const UpdatePlayer = ({ playerData }) => {
+    const updatePlayersData = playersStore(state => state.updatePlayersData);
+    const [open, setOpen] = useState(false);
+    const setNotify = muiStore(state => state.setNotify)
+    const [notifiy, setNotifiy] = useState({
+        open: false,
+        vertical: 'top',
+        horizontal: 'center',
+        msg: "Hello, welcome to Xtend.",
+        type: "success"
+    })
+
+
+    const handleClickOpen = () => {
+        setOpen(true);
     };
 
-    const setPlayername = (e) => {
-        const { value } = e.target;
-        // console.log(value);
-        setName(value);
-    }
-    const fetchAllPlayers = async () => {
-        try {
-            const res = await axios.get("https://x-tend.solutions/fantasy/api/");
-            LoadPlayers(res.data);
-            alert("Done");
-
-        } catch (err) {
-            // alert("Something went wrong get");
-            console.log(err);
-        }
+    const handleClose = () => {
+        setOpen(false);
     };
 
     const handleUpdatePlayer = async (e) => {
         e.preventDefault();
-
-        try {
-            // await axios.put(`https://x-tend.solutions/fantasy/api/${player.id}`, player);
-
-            await axios.put(`https://x-tend.solutions/fantasy/api/`, player);
-            // navigate("/");
-            await fetchAllPlayers();
-            // setNTeams(config.nTeams);
-            // handleOpen();
-        } catch (err) {
-            console.log(err);
-            // setError(true);
+        const player = {
+            name,
+            tcolor: tshirt,
+            status
         }
+        updatePlayerDB(playerData.id, {
+            ...player,
+        }).then(() => {
+
+            setNotify({
+                open: true,
+                vertical: 'buttom',
+                horizontal: 'left',
+                msg: "The player has been updated successfully",
+                type: "success"
+            })
+
+            updatePlayersData()
+            handleClose()
+        }).catch(err => {
+            console.log(err);
+            setNotify({
+                open: true,
+                vertical: 'buttom',
+                horizontal: 'left',
+                msg: "Something went wrong, please refresh your browser and try again.",
+                type: "error"
+            })
+        });
+
     };
+    // 
+    const [tshirt, setTshirt] = useState(playerData.tcolor);
+    const [status, setStatus] = useState(playerData.status);
+    const [name, setName] = useState(playerData.name);
     return (
-        <Fragment>
+        <div>
+
             <p className="cursor-pointer text-blue-400 hover:text-blue-600 underline inline-block lg:top-0 relative top-2"
-                onClick={handleOpen}
+                onClick={handleClickOpen}
             >Edit</p>
-            {/* <Button onClick={handleOpen} variant="gradient" className={btnStyle} color="indigo">
-                Update Player
-            </Button> */}
-            <Dialog open={open} handler={handleOpen} size="xl"
-                className="lg:max-w-[50%]  lg:min-w-[50%] lg:h-fit h-[75%] lg:overflow-hidden overflow-y-scroll"
-                dismiss={
-                    {
-                        enabled: false,
-                        escapeKey: false,
-                        referencePointerDown: false,
-                        outsidePointerDown: false,
-                        ancestorScroll: false,
-                        bubbles: false,
-                    }
-
-                }
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
             >
-                <DialogHeader>Player Attributes</DialogHeader>
-                <DialogBody divider>
-                    <div className="flex flex-wrap w-full">
-                        <div className="md:w-6/12 sm:w-full w-full md:pd-0 sm:pb-3 pb-3 sm:pr-3 pr-0">
-                            <Input label="Name" onChange={(e) => setPlayername(e)} value={player.name} />
+                <DialogTitle id="alert-dialog-title">
+                    {name}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        <div className="flex flex-wrap w-full p-3">
+                            {/* <div className="md:w-12/12 sm:w-full w-full md:pd-0 sm:pb-3 pb-3 sm:pr-3 pr-0 "> */}
+                            <div className="md:w-12/12 sm:w-full w-full md:pd-0 sm:pb-3 pb-3 sm:pr-3 pr-0">
+                                <Input label="Name" onChange={(e) => setName(e.target.value)} value={name} />
+                            </div>
+                            <div className="md:w-8/12 sm:w-8/12 w-full">
+                                <Select label="T-Shirt" value={tshirt}>
+                                    <Option onClick={() => setTshirt("black")} value={"black"}><p className="text-gray-900">Black</p></Option>
+                                    <Option onClick={() => setTshirt("white")} value={"white"}><p className="text-gray-600">White</p></Option>
+                                    <Option onClick={() => setTshirt("red")} value={"red"}><p className="text-red-900">Red</p></Option>
+                                    <Option onClick={() => setTshirt("blue")} value={"blue"}><p className="text-light-blue-700">Blue</p></Option>
+                                    <Option onClick={() => setTshirt("black-white")} value={"black-white"}><p className="text-gray-900 inline-block">Black-</p><p className="text-gray-600 inline-block">White</p></Option>
+                                </Select>
+                            </div>
+                            <div className="flex flex-col md:w-4/12 sm:w-4/12 w-full items-center relative md:left-4 left-0">
+                                <label className="font-bold text-gray-900 text-center">
+                                    Available
+                                </label>
+                                {
+                                    status && <Switch defaultChecked onClick={() => setStatus(false)} />
+                                }
+                                {
+                                    !status && <Switch onClick={() => setStatus(true)} />
+                                }
+
+
+                            </div>
                         </div>
-                        <div className="md:w-4/12 sm:w-9/12 w-full">
-                            <Select label="T-Shirt" value={player.tcolor}>
-                                <Option onClick={() => setTcolor("black")} value={"black"}><p className="text-gray-900">Black</p></Option>
-                                <Option onClick={() => setTcolor("white")} value={"white"}><p className="text-gray-600">White</p></Option>
-                                <Option onClick={() => setTcolor("red")} value={"red"}><p className="text-red-900">Red</p></Option>
-                                <Option onClick={() => setTcolor("blue")} value={"blue"}><p className="text-light-blue-700">Blue</p></Option>
-                                <Option onClick={() => setTcolor("black-white")} value={"black-white"}><p className="text-gray-900 inline-block">Black-</p><p className="text-gray-600 inline-block">White</p></Option>
-                            </Select>
-                        </div>
-                        <div className="flex flex-col md:w-2/12 sm:w-3/12 w-full items-center relative md:left-4 left-0">
-                            <label className="font-bold text-gray-900 text-center">
-                                Available
-                            </label>
-                            {
-                                player.status && <Switch defaultChecked onClick={() => setStatus(false)} />
-                            }
-                            {
-                                !player.status && <Switch onClick={() => setStatus(true)} />
-                            }
 
 
-                        </div>
+                        {/* </div> */}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
 
-
-
-
-
-                    </div>
-                </DialogBody>
-                <DialogFooter>
                     <Button
                         variant="text"
                         color="red"
                         onClick={() => {
-                            resetPlayer()
-                            handleOpen()
+                            handleClose()
                         }}
                         className="mr-1"
                     >
@@ -134,9 +140,10 @@ const UpdatePlayer = ({ playerAppId }) => {
                     <Button variant="gradient" color="blue" onClick={handleUpdatePlayer}>
                         <span>Update</span>
                     </Button>
-                </DialogFooter>
+                </DialogActions>
             </Dialog>
-        </Fragment >
+        </div>
+
     );
 }
 

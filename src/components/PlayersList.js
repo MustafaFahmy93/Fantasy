@@ -1,21 +1,26 @@
 import { Fragment, useState, useContext } from "react";
 import {
     Button,
-    Dialog,
-    DialogHeader,
-    DialogBody,
     DialogFooter,
     Typography
 } from "@material-tailwind/react";
 // import { players } from "../data/players.js"
-import axios from "axios";
+// import axios from "axios";
 import UpdatePlayer from "./UpdatePlayer";
 import AppConfig from "../context/AppConfig";
 import { playersStore } from "../context/PlayersContext";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import { delplayerDB } from "../db/db";
+import { muiStore } from "../context/muiContext";
 
 const PlayersList = () => {
     // const { players, LoadPlayers } = useContext(PlayersConfig);
+    const setNotify = muiStore(state => state.setNotify)
     const players = playersStore(state => state.playersData)
+    const updatePlayersData = playersStore(state => state.updatePlayersData)
     const { setMode, setHideBoard } = useContext(AppConfig);
 
     const [open, setOpen] = useState(false);
@@ -29,12 +34,30 @@ const PlayersList = () => {
         if (window.confirm('Are you sure?')) {
             try {
 
-                // await axios.delete(`https://x-tend.solutions/fantasy/api/${id}`);
-                await axios.delete("https://x-tend.solutions/fantasy/api/", { data: { id: id }, headers: { "Authorization": "***" } });
+                delplayerDB(id).then(() => {
+                    setHideBoard(false)
+                    handleOpen()
+                    setNotify({
+                        open: true,
+                        vertical: 'buttom',
+                        horizontal: 'left',
+                        msg: "The player has been deleted successfully.",
+                        type: "success"
+                    })
+                    setMode(2)
+                    updatePlayersData()
+                }).catch((err) => {
+                    console.error(err)
+                    setNotify({
+                        open: true,
+                        vertical: 'buttom',
+                        horizontal: 'left',
+                        msg: "Something went wrong, please refresh your browser and try again.",
+                        type: "error"
+                    })
+                })
 
-                // window.location.reload()
-                // await fetchAllPlayers();
-                alert("Done");
+                // alert("Done");
 
 
             } catch (err) {
@@ -46,43 +69,26 @@ const PlayersList = () => {
     };
 
     return (
-        <Fragment>
-            <Typography
-                as="li"
-                variant="small"
-                color="white"
-                className="p-1 font-normal"
-                onClick={() => {
-
-                    // fetchAllPlayers()
-                    setHideBoard(true)
-                    setMode(1)
-                    handleOpen()
-                }
-
-                }
+        <div>
+            <p onClick={(e) => {
+                e.preventDefault()
+                setHideBoard(true)
+                setMode(1)
+                handleOpen()
+            }}
+                className="cursor-pointer flex items-center">
+                Players
+            </p>
+            <Dialog
+                open={open}
+                onClose={handleOpen}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
             >
-                <p className="cursor-pointer flex items-center">
-                    Players
-                </p>
-            </Typography>
-            <Dialog open={open} handler={handleOpen} size="xl"
-                className="lg:max-w-[50%] lg:min-w-[50%] max-h-[75%] inset-auto relative lg:h-fit h-fit overflow-y-scroll"
-                dismiss={
-                    {
-                        enabled: false,
-                        escapeKey: false,
-                        referencePointerDown: false,
-                        outsidePointerDown: false,
-                        ancestorScroll: false,
-                        bubbles: false,
-                    }
-
-                }
-            >
-                <DialogHeader>Players list</DialogHeader>
-                <DialogBody divider>
-
+                <DialogTitle id="alert-dialog-title">
+                    Players list
+                </DialogTitle>
+                <DialogContent>
                     <table className="border-collapse w-full h-full">
                         <thead>
                             <tr>
@@ -125,7 +131,7 @@ const PlayersList = () => {
                                                 className="inline-block"
                                             >
 
-                                                <UpdatePlayer playerAppId={index} />
+                                                <UpdatePlayer playerData={player} />
                                             </div>
 
                                             <p className="cursor-pointer text-blue-400 hover:text-blue-600 underline pl-6 inline-block lg:top-0 relative top-2"
@@ -141,9 +147,8 @@ const PlayersList = () => {
 
                         </tbody>
                     </table>
-
-                </DialogBody>
-                <DialogFooter>
+                </DialogContent>
+                <DialogActions>
                     <Button
                         variant="text"
                         color="red"
@@ -164,9 +169,9 @@ const PlayersList = () => {
                     }}>
                         <span>Confirm</span>
                     </Button>
-                </DialogFooter>
+                </DialogActions>
             </Dialog>
-        </Fragment>
+        </div>
     );
 }
 

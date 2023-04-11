@@ -12,7 +12,7 @@ const PlayerCard = ({ player }) => {
     let attValueStyle = "inline-block w-2/12 text-center pt-1 text-xs";
     return (
         <div className='space-y-1 playerCard'>
-            <p className='text-center'>{player.name}</p>
+            <p className='text-center'>{player.name} {player.votes > 1 ? " [" + player.votes + " votes]" : " [" + player.votes + " vote]"}</p>
             <div className='flex flex-warp'>
                 <p className={attNameStyle}>Pace</p>
                 <input type="range" className={attRangeStyle}

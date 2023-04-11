@@ -1,42 +1,82 @@
-import { Fragment, useState, useContext } from "react";
+import { Fragment, useState, useContext, useRef } from "react";
 import {
     Input,
     Button,
-    Dialog,
-    DialogHeader,
-    DialogBody,
-    DialogFooter,
     Switch,
     Select, Option
 } from "@material-tailwind/react";
-import axios from "axios";
-import PlayersConfig from "../context/PlayersConfig";
+
 import AppConfig from "../context/AppConfig";
+import { AddplayerDB } from "../db/db";
+import { playersStore } from "../context/PlayersContext";
+
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import { muiStore } from "../context/muiContext";
+
 const AddPlayer = ({ btnStyle }) => {
-    const { player, LoadPlayers, resetPlayer, setName, setStatus, setTcolor, setPace, setShooting, setPassing, setDribbling, setDefending, setPhysicality } = useContext(PlayersConfig);
+    const setNotify = muiStore(state => state.setNotify)
+    const updatePlayersData = playersStore(state => state.updatePlayersData)
+    // const { player, LoadPlayers, resetPlayer, setName, setStatus, setTcolor, setPace, setShooting, setPassing, setDribbling, setDefending, setPhysicality } = useContext(PlayersConfig);
     const { setMode, setHideBoard } = useContext(AppConfig);
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => {
-        resetPlayer()
+        // resetPlayer()
         setOpen(!open)
     };
 
-    const setPlayername = (e) => {
-        const { value } = e.target;
-        // console.log(value);
 
-        setName(value);
-    }
+
+    const [tshirt, setTshirt] = useState("black");
+    const [status, setStatus] = useState(false);
+    const [name, setName] = useState("");
 
     const handleAddPlayer = async (e) => {
         e.preventDefault();
         try {
             // console.log("add player");
             // console.log(player);
-            await axios.post("https://x-tend.solutions/fantasy/api/", player);
-            alert(player.name + " has been added to the players list");
-            resetPlayer();
+            // await axios.post("https://x-tend.solutions/fantasy/api/", player);
+            // alert(player.name + " has been added to the players list");
+            // resetPlayer();
+            const player = {
+                name,
+                tcolor: tshirt,
+                status
+
+            }
+            // console.log(player);
+            AddplayerDB(player).then(() => {
+                // alert(player.name + " has been added to the players list");
+                handleOpen()
+                setNotify({
+                    open: true,
+                    vertical: 'buttom',
+                    horizontal: 'left',
+                    msg: player.name + " has been added to the players list",
+                    type: "success"
+                })
+                updatePlayersData()
+                setHideBoard(false)
+                // reset
+                setStatus(false)
+                setName("")
+                setTshirt("black")
+                // setMode(2)
+            }).catch((err) => {
+                console.log(err)
+                setNotify({
+                    open: true,
+                    vertical: 'buttom',
+                    horizontal: 'left',
+                    msg: "Something went wrong, please refresh your browser and try again.",
+                    type: "error"
+                })
+            })
+
             // await fetchAllPlayers();
         } catch (err) {
             console.log(err);
@@ -44,8 +84,12 @@ const AddPlayer = ({ btnStyle }) => {
             // setError(true)
         }
     };
+    // 
+
     return (
-        <Fragment>
+
+        <div>
+
             <Button onClick={() => {
                 setHideBoard(true)
                 setMode(1)
@@ -54,34 +98,30 @@ const AddPlayer = ({ btnStyle }) => {
             } variant="gradient" className={btnStyle} color="indigo">
                 Add Player
             </Button>
-            <Dialog open={open} handler={handleOpen} size="xl"
-                className="lg:max-w-[50%]  lg:min-w-[50%] lg:h-fit h-[75%] lg:overflow-hidden overflow-y-scroll"
-                dismiss={
-                    {
-                        enabled: false,
-                        escapeKey: false,
-                        referencePointerDown: false,
-                        outsidePointerDown: false,
-                        ancestorScroll: false,
-                        bubbles: false,
-                    }
-
-                }
+            <Dialog
+                open={open}
+                onClose={handleOpen}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
             >
-                <DialogHeader>Player Attributes</DialogHeader>
-                <DialogBody divider>
-                    <div className="flex flex-wrap w-full">
+                <DialogTitle id="alert-dialog-title">
+                    New Player
+                </DialogTitle>
+                <DialogContent>
+                    {/* <DialogContentText id="alert-dialog-description"> */}
+                    <div className="flex flex-wrap w-full p-3 mb-10">
                         <div className="md:w-12/12 sm:w-full w-full md:pd-0 sm:pb-3 pb-3 sm:pr-3 pr-0">
-                            <Input label="Name" onChange={(e) => setPlayername(e)} value={player.name} />
+                            {/* <Input label="Name" ref={nameRef} /> */}
+                            <Input label="Name" onChange={(e) => setName(e.target.value)} value={name} />
                         </div>
                         {/* <div className="lg:w-4/12 md:w-8/12 w-9/12 xs:w-full"> */}
-                        <div className="md:w-8/12 sm:w-8/12 w-full">
-                            <Select label="T-Shirt" value={"black"}>
-                                <Option onClick={() => setTcolor("black")} value={"black"}><p className="text-gray-900">Black</p></Option>
-                                <Option onClick={() => setTcolor("white")}><p className="text-gray-600">White</p></Option>
-                                <Option onClick={() => setTcolor("red")}><p className="text-red-900">Red</p></Option>
-                                <Option onClick={() => setTcolor("blue")}><p className="text-light-blue-700">Blue</p></Option>
-                                <Option onClick={() => setTcolor("black-white")}><p className="text-gray-900 inline-block">Black-</p><p className="text-gray-600 inline-block">White</p></Option>
+                        <div className="md:w-8/12 sm:w-8/12 w-full z-100000">
+                            <Select label="T-Shirt" value={tshirt}>
+                                <Option onClick={() => setTshirt("black")} value={"black"}><p className="text-gray-900">Black</p></Option>
+                                <Option onClick={() => setTshirt("white")}><p className="text-gray-600">White</p></Option>
+                                <Option onClick={() => setTshirt("red")}><p className="text-red-900">Red</p></Option>
+                                <Option onClick={() => setTshirt("blue")}><p className="text-light-blue-700">Blue</p></Option>
+                                <Option onClick={() => setTshirt("black-white")}><p className="text-gray-900 inline-block">Black-</p><p className="text-gray-600 inline-block">White</p></Option>
                             </Select>
                         </div>
                         <div className="flex flex-col md:w-4/12 sm:w-4/12 w-full items-center relative md:left-4 left-0">
@@ -89,10 +129,10 @@ const AddPlayer = ({ btnStyle }) => {
                                 Available
                             </label>
                             {
-                                player.status && <Switch defaultChecked onClick={() => setStatus(false)} />
+                                status && <Switch defaultChecked onClick={() => setStatus(false)} />
                             }
                             {
-                                !player.status && <Switch onClick={() => setStatus(true)} />
+                                !status && <Switch onClick={() => setStatus(true)} />
                             }
 
 
@@ -103,8 +143,9 @@ const AddPlayer = ({ btnStyle }) => {
 
 
                     </div>
-                </DialogBody>
-                <DialogFooter>
+                    {/* </DialogContentText> */}
+                </DialogContent>
+                <DialogActions>
                     <Button
                         variant="text"
                         color="red"
@@ -120,10 +161,11 @@ const AddPlayer = ({ btnStyle }) => {
                     <Button variant="gradient" color="green" onClick={handleAddPlayer}>
                         <span>Add</span>
                     </Button>
-                </DialogFooter>
+                </DialogActions>
             </Dialog>
-        </Fragment>
+        </div>
     );
 }
 
 export default AddPlayer
+

@@ -36,7 +36,7 @@ const Boards = () => {
 
     useEffect(() => {
         // setIsLoading(true)
-        console.log(players)
+        // console.log(players)
         if (players.length > 0) {
             setIsLoading(true);
             setTeams([[], [], [], [], []]);
