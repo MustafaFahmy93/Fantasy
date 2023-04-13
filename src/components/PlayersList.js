@@ -1,4 +1,4 @@
-import { Fragment, useState, useContext } from "react";
+import { Fragment, useState, useContext, useEffect } from "react";
 import {
     Button,
     DialogFooter,
@@ -21,8 +21,10 @@ const PlayersList = () => {
     const setNotify = muiStore(state => state.setNotify)
     const players = playersStore(state => state.playersData)
     const updatePlayersData = playersStore(state => state.updatePlayersData)
-    const { setMode, setHideBoard } = useContext(AppConfig);
-
+    const { setMode, setHideBoard, config } = useContext(AppConfig);
+    // useEffect(() => {
+    //     console.log(config)
+    // }, [config])
     const [open, setOpen] = useState(false);
     // const [players, setPlayers] = useState([]);
     const handleOpen = () => {
@@ -44,7 +46,7 @@ const PlayersList = () => {
                         msg: "The player has been deleted successfully.",
                         type: "success"
                     })
-                    setMode(2)
+                    // setMode(2)
                     updatePlayersData()
                 }).catch((err) => {
                     console.error(err)
@@ -73,7 +75,7 @@ const PlayersList = () => {
             <p onClick={(e) => {
                 e.preventDefault()
                 setHideBoard(true)
-                setMode(1)
+                // setMode(1)
                 handleOpen()
             }}
                 className="cursor-pointer flex items-center">
@@ -154,7 +156,7 @@ const PlayersList = () => {
                         color="red"
                         onClick={() => {
                             setHideBoard(false)
-                            setMode(2)
+                            // setMode(2)
 
                             handleOpen()
                         }}
@@ -164,7 +166,7 @@ const PlayersList = () => {
                     </Button>
                     <Button variant="gradient" color="green" onClick={() => {
                         setHideBoard(false)
-                        setMode(2)
+                        // setMode(config.mode)
                         handleOpen()
                     }}>
                         <span>Confirm</span>

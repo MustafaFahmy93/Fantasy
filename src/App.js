@@ -12,9 +12,12 @@ import { muiStore } from './context/muiContext';
 
 function App() {
   const updatePlayersData = playersStore(state => state.updatePlayersData)
+  const playersData = playersStore(state => state.playersData)
   const notify = muiStore(state => state.notify)
   const setNotify = muiStore(state => state.setNotify)
   useEffect(() => {
+    // console.log(["players", playersData])
+    // if (playersData.length === 0)
     updatePlayersData()
   }, [])
   return (

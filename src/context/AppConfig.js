@@ -4,7 +4,7 @@ const AppConfig = createContext();
 export function AppProvide({ children }) {
     const defaultConfig = {
         isLogin: false,
-        isLoading: true,
+        isLoading: false,
         user: "admin",
         pass: "admin",
         teamSize: "5",

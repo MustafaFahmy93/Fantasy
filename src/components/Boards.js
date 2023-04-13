@@ -30,33 +30,35 @@ const Boards = () => {
     const [teamIndex, setTeamIndex] = useState(0)
     const [btnRight, setBtnRight] = useState(true);
     const [btnLeft, setBtnLeft] = useState(false);
-    const [teams, setTeams] = useState([[], [], [], [], []]);
+    // const [teams, setTeams] = useState([[], [], [], [], []]);
+    const teams = playersStore(state => state.teams)
+    const updateTeams = playersStore(state => state.updateTeams)
 
     // const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         // setIsLoading(true)
-        // console.log(players)
+        // console.log(["teams", teams, players.length])
         if (players.length > 0) {
             setIsLoading(true);
-            setTeams([[], [], [], [], []]);
+            updateTeams([[], [], [], [], []]);
             setTimeout(() => {
                 if (config.mode === 1) {
-                    setTeams(teamBuilderRandom(players, nTeams, teamSize))
+                    updateTeams(teamBuilderRandom(players, nTeams, teamSize))
                     setIsLoading(false)
                 }
                 else if (config.mode === 2) {
-                    setTeams(teamBuilder(players, nTeams, teamSize))
+                    updateTeams(teamBuilder(players, nTeams, teamSize))
                     setIsLoading(false)
 
 
                 }
                 else if (config.mode === 3) {
-                    setTeams(teamBuilderMinMax(players, nTeams, teamSize))
+                    updateTeams(teamBuilderMinMax(players, nTeams, teamSize))
                     setIsLoading(false)
                 }
                 else if (config.mode === 4) {
-                    setTeams(teamBuilderCaptainsRandom(players, config.captainsId, nTeams, teamSize))
+                    updateTeams(teamBuilderCaptainsRandom(players, config.captainsId, nTeams, teamSize))
                     setIsLoading(false)
                 }
             }, 500);
@@ -66,7 +68,7 @@ const Boards = () => {
 
 
     useEffect(() => {
-        // console.log("team Change")
+        // console.log("team Change", teams)
         if (config.nTeams < teamIndex) {
             setTeamIndex(config.nTeams)
         } else {
