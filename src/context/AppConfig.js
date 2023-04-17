@@ -9,7 +9,7 @@ export function AppProvide({ children }) {
         pass: "admin",
         teamSize: "5",
         nTeams: "3",
-        mode: 2, // balance
+        mode: 1, // random
         captainsId: [],
         hideBoard: false,
 

@@ -92,7 +92,7 @@ const AddPlayer = ({ btnStyle }) => {
 
             <Button onClick={() => {
                 setHideBoard(true)
-                setMode(1)
+                // setMode(1)
                 handleOpen()
             }
             } variant="gradient" className={btnStyle} color="indigo">
@@ -151,7 +151,7 @@ const AddPlayer = ({ btnStyle }) => {
                         color="red"
                         onClick={() => {
                             setHideBoard(false)
-                            setMode(2)
+                            // setMode(2)
                             handleOpen()
                         }}
                         className="mr-1"
